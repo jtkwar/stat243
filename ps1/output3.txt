@@ -1,0 +1,7 @@
+ghcnd-countries.txt
+ghcnd-inventory.txt
+ghcnd-states.txt
+ghcnd-stations.txt
+ghcnd-version.txt
+readme.txt
+status.txt

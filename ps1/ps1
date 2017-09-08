@@ -1,0 +1,117 @@
+#! /bin/bash
+# STAT 243, PS1
+# Author: Jeffrey Kwarsick
+# SID: 24974295
+
+#################### Problem 1 ####################
+Class survey completed shortly after the start of class.
+
+#################### Problem 2 (a) ####################
+#First, I download the file from the link provided in the problem set with the following command.
+wget ""http://data.un.org/Handlers/DownloadHandler.ashx?DataFilter=itemCode:526&DataMartId=FAO&Format=csv&c=2,3,4,5,6,7&s=countryName:asc,elementCode:asc,year:desc"
+
+#The file is then unzipped with the following command.
+unzip "DownloadHandler.ashx?DataFilter=itemCode:526&DataMartId=FAO&Format=csv&c=2,3,4,5,6,7&s=countryName:asc,elementCode:asc,year:desc"
+
+#This produces a .csv file, shown below.
+UNdata_Export_20170906_025740728.csv
+
+#I then create two files, one containing all the information for individual countries and one with information concerning regions.
+#In the file, countries are separated from regions with a '+' at the end of the "Country or Area" column.
+
+grep '+' UNdata_Export_20170906_025740728.csv > region.csv      #separates all the information by region into it's own .csv file
+grep -v '+' UNdata_Export_20170906_025740728.csv > country.csv  #separates all the information by country into it's own .csv file
+
+#Removed commas in 'Country' column of data.  It affects my ability to accurately pull out information asked for in the problem.
+sed -i 's\, \ \g' country.csv                                   #Replaces commas found in 'Country or Region' Column of dataset with a single whitespace
+
+#Removed quotations in the 'Value' column, transforming the column data from a string to a numeric.
+#Two instances of this code are required to remove both quotation marks at the beginning and end of the value.
+sed -i 's\"\\11'
+sed -i 's\"\\11'                                                #Doing this twice removes both quotation marks around numeric values in 'Value' column.
+
+#This is done for the 'Year' column in country.csv values
+sed -i 's\"\\5'
+sed -i 's\"\\5'
+
+#From here, I can use the following command in order to pull the top 5 nations, in 2005, for Area Harvested of apricots.
+#I search specifically for a string fragment -- '"Area Harvested",2005'
+#Separate into two different columns of data and sort it in the reverse order and print the top five to a .txt file.
+grep '"Area Harvested",2005' country.csv | cut -d',' -f1,6 | sort -r -n -t',' -k 2 | head -n 5 > output.txt
+
+#The results for 2005 in Area Harvested for Apricots were the following --
+"Turkey",2005,60000
+"Iran Islamic Republic of",2005,49388
+"Pakistan",2005,28884
+"Uzbekistan",2005,28000
+"Algeria",2005,22888
+
+#I then moved to automate the procedure to look at the top 5 countries in Area Harvested for apricots every ten years from 1965 to 2005.
+#The results are shown below.
+"USSR",1965,60000
+"Turkey",1965,46500
+"United States of America",1965,15460
+"Spain",1965,15100
+"Tunisia",1965,15000
+
+"USSR",1975,71000
+"Turkey",1975,41500
+"Spain",1975,23300
+"Tunisia",1975,18981
+"Italy",1975,14000
+
+"Turkey",1985,47250
+"USSR",1985,45000
+"Spain",1985,20000
+"Iran Islamic Republic of",1985,16504
+"Tunisia",1985,15000
+
+"Turkey",1995,57355
+"Iran Islamic Republic of",1995,28000
+"Spain",1995,22500
+"Ukraine",1995,18600
+"Tunisia",1995,17000
+
+"Turkey",2005,60000
+"Iran Islamic Republic of",2005,49388
+"Pakistan",2005,28884
+"Uzbekistan",2005,28000
+"Algeria",2005,22888
+
+#It is clear from the result of the automation that the rankings of the top 5 nations for Area Harvested for apricots did change over a 50 year period.
+#Turkey has slowly grown to top the USSR and after the fall of the USSR, some of the satellite Soviet states became top producers of apricots by Area Harvested.
+#Iran has also been on a growth in Area Harvested of apricots in the last 20 - 30 years.
+
+#################### Problem 2 (b) ####################
+
+#################### Problem 3 ####################
+#First, I started with downloading the url provided in the problem set.
+wget "https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/"
+
+#This downloads the index.html file.
+#Since I am looking for the all of the .txt documents in the .html file and have the intention to find them, I searched for a means to isloate the names of the .txt files
+grep ".txt" > output3.txt
+
+#The above code revealed there were 7 .txt files and the lines of code their names were embedded in.
+#The following commands stripped the everything ahead of the .txt full filename and were exported to an output.txt file
+sed -i 's\.*txt">\\g' output3.txt                                 
+
+#This removes all text in the lines of code containing the names of the .txt files in after of the .txt filenames
+sed -i 's\</a>\\g' output3.txt
+
+#What I am left with in the output3.txt file are the names of the seven .txt files on the .html page.
+ghcnd-countries.txt
+ghcnd-inventory.txt
+ghcnd-states.txt
+ghcnd-stations.txt
+ghcnd-version.txt
+readme.txt
+status.txt
+
+#The next line of bash shell code then opens output3.txt and uses each name of the .txt filename
+#It inserts it into the proper url and downloads each .txt file
+cat output3.txt | while read line; do echo "Downloading: $line from https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/$line; wget "https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/$line"; done;
+
+#This downloads all the .txt files and prints an output that it is downloading the file and from where before the system conducts the downloading.
+
+#################### Problem 4 ####################

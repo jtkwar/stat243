@@ -1,0 +1,10 @@
+function UNFAO(){
+index=$1; #user input for item code they wish to download
+if [$index -eq [0-9]+]; then
+wget -O $index.zip "http://data.un.org/Handlers/DownloadHandler.ashx?DataFilter=itemCode:$1&DataMartId=FAO&Format=csv&c=2,3,4,5,6,7&s=countryName:asc,elementCode:asc,year:desc";
+unzip -c $index.zip > $index.csv;
+less $index.csv;
+else if [$index=='-h']; then
+echo "This function takes an item code from the United Nations Food and Agriculture Organization (FAO) data on agricultural production and queries that website repository containing datasets production data of various crops.  A proper input of item code will result in the query of the proper url, downloading the zipped file, and the unzipping of the file."
+#Need to figure out how to go up a level in the loop to get another chance to input another item code
+}

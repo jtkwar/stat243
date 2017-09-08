@@ -1,0 +1,25 @@
+"USSR",1965,60000
+"Turkey",1965,46500
+"United States of America",1965,15460
+"Spain",1965,15100
+"Tunisia",1965,15000
+"USSR",1975,71000
+"Turkey",1975,41500
+"Spain",1975,23300
+"Tunisia",1975,18981
+"Italy",1975,14000
+"Turkey",1985,47250
+"USSR",1985,45000
+"Spain",1985,20000
+"Iran Islamic Republic of",1985,16504
+"Tunisia",1985,15000
+"Turkey",1995,57355
+"Iran Islamic Republic of",1995,28000
+"Spain",1995,22500
+"Ukraine",1995,18600
+"Tunisia",1995,17000
+"Turkey",2005,60000
+"Iran Islamic Republic of",2005,49388
+"Pakistan",2005,28884
+"Uzbekistan",2005,28000
+"Algeria",2005,22888
