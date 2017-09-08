@@ -1,0 +1,23 @@
+\documentclass{article}
+
+\author{Jeff Kwarsick}
+\title{PS1}
+
+\begin{document}
+
+\maketitle
+\section{PS1}
+
+\noindent The height of the water level in Lake Huron fluctuates over time. Here I ’analyze’ the variation using R. I
+show a histogram of the lake levels for the period 1875 to 1972.
+
+<<fig.width=3, fig.height=3>>=
+data("LakeHuron")
+hist(LakeHuron)
+
+lowHi <- c(which.min(LakeHuron), which.max(LakeHuron))
+yearExtrema <- attributes(LakeHuron)$tsp[1]-1 + lowHi
+@
+
+
+\end{document}
