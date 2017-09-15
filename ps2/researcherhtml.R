@@ -12,7 +12,7 @@ researcherHTML<-function()
   url1<-"/scholar?q="
   
   #User input to obtain name of researcher of interest
-  usr_input<-readline(prompt="Enter researcher name (first and last): ")
+  usr_input<-readline(prompt="Enter researcher name (first then last, space delimited): ")
   spltname<-strsplit(usr_input, " ") #Splits the name based on prescence of whitespace
   #completed url needed for query
   complete_url<-paste0(base_url,url1,spltname[[1]][1],"+",spltname[[1]][2])
@@ -35,7 +35,7 @@ researcherHTML<-function()
   ##search1<-paste0(spltname[[1]][1]," ",spltname[[1]][2])
   ##search2<-paste0(spltname[[1]][2]," ",spltname[[1]][1])
   #locates the position of the user name of interest in the link
-  occurence_position<-grep(usr_input, linklist)
+  occurence_position<-grep(spltname[[1]][2], linklist)
   #now it takes the first occurence and extracts the url needed for researcher user profile citation page
   location<-as.numeric(occurence_position[[2]])
   loc<-linklist[[location]]
