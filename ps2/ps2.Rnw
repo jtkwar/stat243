@@ -34,7 +34,7 @@ doc<-htmlParse(readLines(url))
 #includes the link containing user-ID from relevant search
 #but there are many different user-IDs, must pick correct one
 
-#links<-getHTMLLinks(html)
+#links<-gethtmlLinks(html)
 listofANodes<-getNodeSet(doc, "//a[@href]")
 
 #Create empty vector
@@ -58,7 +58,7 @@ full_url<-paste0(base_url,tmp2)
 \subsection{Part (a)}
 \noindent{After utilizing the developer tools, I crafted the following function below.  The function takes the user input as a first and last name separated by a single space and parses it into a url.  It searches the page and finds the user profile ID, required for the opening and scraping from the Google Scholar user profile page.  It returns a list of length two; the first item in the list is the Google Scholar User Profile ID and the second item in the list is the html text of the researcher.  The html text will be passed to the the second function for Part (b).}
 <<>>=
-researcherHTML<-function()
+researcherhtml<-function()
 {
   #Relevant libraries for the operation of the function
   library('bitops')
@@ -111,7 +111,7 @@ researcherHTML<-function()
   return(returnlist)
 }
 #Command used to extract information for Geoffrey Hinton from Google Scholar
-#GeoffreyHinton<-researcherHTML()
+#GeoffreyHinton<-researcherhtml()
 @
 \subsection{Part (b)}
 \noindent{The function, gs\_citation\_dataframe(), reads in the html text from the output of the previous function and utilizes the getNodeSet() function to extract the journal article information requested in the problem; article title, authors, journal information, number of citations, and year published.  The lists are then converted from the type 'externalptr' to 'character.'  The gsub() function is then used to strip away the non-relevant text, before and after, the title, authors, journal information, number of citations, and the year published.  The information is saved into vectors and then the data frame is constructed and returned.}
@@ -179,11 +179,11 @@ gs_citation_dataframe<-function(html_citation_page)
 
 #Now to pick another researcher, let's say Terrence Sejnowski
 #Commands used are below
-#Terrence<-researcherHTML()
+#Terrence<-researcherhtml()
 #TSejnowski<-gs_citation_dataframe(Terrence[[2]])
 @
 \subsection{Part (c)}
 \noindent{Here is the work for Part (c).}
 \subsection{Part (d)}
-\noindent{Maybe if I had time, I will get to Part (d).}
+\noindent{When you click 'Show More' on the on the Google Scholar Citation Page, it changes the value given under span#gsc$_$a$_$nn.}
 \end{document}

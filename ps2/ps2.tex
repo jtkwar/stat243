@@ -90,7 +90,7 @@
 \hlcom{#includes the link containing user-ID from relevant search}
 \hlcom{#but there are many different user-IDs, must pick correct one}
 
-\hlcom{#links<-getHTMLLinks(html)}
+\hlcom{#links<-gethtmlLinks(html)}
 \hlstd{listofANodes}\hlkwb{<-}\hlkwd{getNodeSet}\hlstd{(doc,} \hlstr{"//a[@href]"}\hlstd{)}
 
 \hlcom{#Create empty vector}
@@ -129,7 +129,7 @@
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{researcherHTML}\hlkwb{<-}\hlkwa{function}\hlstd{()}
+\hlstd{researcherhtml}\hlkwb{<-}\hlkwa{function}\hlstd{()}
 \hlstd{\{}
   \hlcom{#Relevant libraries for the operation of the function}
   \hlkwd{library}\hlstd{(}\hlstr{'bitops'}\hlstd{)}
@@ -182,7 +182,7 @@
   \hlkwd{return}\hlstd{(returnlist)}
 \hlstd{\}}
 \hlcom{#Command used to extract information for Geoffrey Hinton from Google Scholar}
-\hlcom{#GeoffreyHinton<-researcherHTML()}
+\hlcom{#GeoffreyHinton<-researcherhtml()}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
@@ -254,7 +254,7 @@
 
 \hlcom{#Now to pick another researcher, let's say Terrence Sejnowski}
 \hlcom{#Commands used are below}
-\hlcom{#Terrence<-researcherHTML()}
+\hlcom{#Terrence<-researcherhtml()}
 \hlcom{#TSejnowski<-gs_citation_dataframe(Terrence[[2]])}
 \end{alltt}
 \end{kframe}
@@ -262,5 +262,5 @@
 \subsection{Part (c)}
 \noindent{Here is the work for Part (c).}
 \subsection{Part (d)}
-\noindent{Maybe if I had time, I will get to Part (d).}
+\noindent{When you click 'Show More' on the on the Google Scholar Citation Page, it changes the value given under span#gsc$_$a$_$nn.}
 \end{document}
