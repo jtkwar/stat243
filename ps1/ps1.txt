@@ -30,7 +30,11 @@ sed -i 's\, \ \g' country.csv                                   #Replaces commas
 sed -i 's\"\\11'
 sed -i 's\"\\11'                                                # Doing this twice removes both quotation marks around numeric values in 'Value' column.
 
-#This is done for the 'Year' column in country.csv values
+#The following code removes the double quotation marks around the data in the 'Year' column.
+sed -i 's\"\\7'
+sed -i 's\"\\7'
+
+#This is done for the 'Element' column in country.csv values
 sed -i 's\"\\5'
 sed -i 's\"\\5'
 

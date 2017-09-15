@@ -1,0 +1,266 @@
+\documentclass{article}\usepackage[]{graphicx}\usepackage[]{color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
+\let\hlipl\hlkwb
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
+\title{Problem Set 2}
+\author{Jeffrey Kwarsick}
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\begin{document}
+\maketitle
+\section{Problem 1}
+\subsection{Part (a)}
+\noindent{In tmp1.csv, there are $2\cdot10^6$ bytes.  The number of bytes accounts for the $1\cdot10^6$ letters from the vector created in R plus the end-of-line (or comma delimiter) and end-of-file bytes.  In tmp2.csv, there are 1,000,001 bytes in the file.  This accounts for each of the one million letters written into the file from the 'chars' vector plus one additional byte associated with the end-of-file.}
+\par{For tmp3.Rda, the raw R data saved in binary format, it is considerably smaller than a csv file of the of the same list of numbers.  Since the numbers are either 17 or 18 bytes in length, depending which if the number is positive or negative and accounting for end-of-line and end-of-file bytes, the file should be what tmp4.csv should by, over 18 MB in size.  Since tmp3.Rda is a binary file, I would expect the numbers to be stored in less bytes or accounts for repetitions in the list.  For tmp5.csv, with the 'nums' list rounded to only have two decimal points, the length of each number is reduced to four or five bytes.  Given the length of each number, the file size appears to be correct according to the filesize reported in the problem set.}
+\subsection{Part (b)}
+\noindent{When saving a file in R with save(), it will compress the file as much as it can based on repetitions.  In the case of tmp6.Rda, it is a list of one million characters.  There are repetitions that likely occur, making it easier to compress the file in comparison to a list of one million unique elements.  This is better illustrated with tmp7.Rda, where it is a list of one million 'a' characters.  The long continuous list of the a single character can be compressed to a great extent in comparison to the list of 26 repeated over a list length of a million as in tmp6.Rda.}
+\section{Problem 2}
+\subsection{Using Developer Tools}
+\noindent{Below is work used to find where the relevant information required for the webscrapping user profile information for part (a) of problem 2.  Using the Developr Tools in Google Chrome, I was able to discern the proper information to use to properly call up the user profile page on Google Scholar for Geoffrey Hinton.  I proceeded stepwise until I completed extracted the user-ID as well as the html text of the top 20 citations on the profile page.}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{#Loading in relevant packages to query and download information from scholar.google.com}
+\hlkwd{library}\hlstd{(}\hlstr{'bitops'}\hlstd{)}
+\hlkwd{library}\hlstd{(}\hlstr{'XML'}\hlstd{)}
+\hlkwd{library}\hlstd{(}\hlstr{'curl'}\hlstd{)}
+\hlkwd{library}\hlstd{(}\hlstr{'RCurl'}\hlstd{)}
+\hlkwd{library}\hlstd{(}\hlstr{'stringr'}\hlstd{)}
+\hlcom{#url for searching for Geoffrey Hinton}
+\hlcom{#I wish to download the html file to extract the user-ID associated with searched user}
+\hlcom{#In this case, it is Geoffrey Hinton}
+\hlstd{url}\hlkwb{<-}\hlstr{"https://scholar.google.com/scholar?hl=en&q=Geoffrey+Hinton"}
+
+\hlcom{#Reads lines from the url given.}
+
+\hlcom{#html<-readLines(url)}
+\hlstd{doc}\hlkwb{<-}\hlkwd{htmlParse}\hlstd{(}\hlkwd{readLines}\hlstd{(url))}
+\end{alltt}
+
+
+{\ttfamily\noindent\color{warningcolor}{\#\# Warning in readLines(url): incomplete final line found on 'https://scholar.google.com/scholar?hl=en\&q=Geoffrey+Hinton'}}\begin{alltt}
+\hlcom{#pulls out all relevant links in the html file}
+\hlcom{#includes the link containing user-ID from relevant search}
+\hlcom{#but there are many different user-IDs, must pick correct one}
+
+\hlcom{#links<-getHTMLLinks(html)}
+\hlstd{listofANodes}\hlkwb{<-}\hlkwd{getNodeSet}\hlstd{(doc,} \hlstr{"//a[@href]"}\hlstd{)}
+
+\hlcom{#Create empty vector}
+\hlcom{#Take list of a nodes and convert from 'externalptr' to 'character'}
+\hlstd{linklist}\hlkwb{<-}\hlkwd{c}\hlstd{()}
+\hlkwa{for} \hlstd{(item} \hlkwa{in} \hlstd{listofANodes) \{}
+  \hlstd{temp}\hlkwb{<-}\hlkwd{as}\hlstd{(item,} \hlstr{"character"}\hlstd{)}
+  \hlstd{linklist}\hlkwb{<-}\hlkwd{c}\hlstd{(linklist, temp)}
+\hlstd{\}}
+\hlcom{#Searches string vector of links for user name of interest}
+\hlcom{#Geoffrey Hinton in this case}
+\hlkwd{grep}\hlstd{(}\hlstr{"Geoffrey Hinton"}\hlstd{, linklist)}
+\end{alltt}
+\begin{verbatim}
+## [1] 40 41
+\end{verbatim}
+\begin{alltt}
+\hlcom{#returns the positions in the vector where the username is found}
+
+\hlcom{#take on of the instances where the username is found}
+\hlcom{#use gsub to strip everything in front and after the link of interest}
+\hlstd{tmp2}\hlkwb{<-}\hlkwd{gsub}\hlstd{(}\hlstr{'(<a href=\textbackslash{}\textbackslash{}")|(".*)'}\hlstd{,} \hlstr{""}\hlstd{, tmp1)} \hlcom{#end game url}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in gsub("{}(<a href=\textbackslash{}\textbackslash{}\textbackslash{}"{})|(\textbackslash{}"{}.*)"{}, "{}"{}, tmp1): object 'tmp1' not found}}\begin{alltt}
+\hlstd{base_url}\hlkwb{<-}\hlstr{"https:\textbackslash{}\textbackslash{}scholar.google.com"}
+\hlstd{full_url}\hlkwb{<-}\hlkwd{paste0}\hlstd{(base_url,tmp2)}
+\end{alltt}
+
+
+{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in paste0(base\_url, tmp2): object 'tmp2' not found}}\end{kframe}
+\end{knitrout}
+\subsection{Part (a)}
+\noindent{After utilizing the developer tools, I crafted the following function below.  The function takes the user input as a first and last name separated by a single space and parses it into a url.  It searches the page and finds the user profile ID, required for the opening and scraping from the Google Scholar user profile page.  It returns a list of length two; the first item in the list is the Google Scholar User Profile ID and the second item in the list is the html text of the researcher.  The html text will be passed to the the second function for Part (b).}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{researcherHTML}\hlkwb{<-}\hlkwa{function}\hlstd{()}
+\hlstd{\{}
+  \hlcom{#Relevant libraries for the operation of the function}
+  \hlkwd{library}\hlstd{(}\hlstr{'bitops'}\hlstd{)}
+  \hlkwd{library}\hlstd{(}\hlstr{'XML'}\hlstd{)}
+  \hlkwd{library}\hlstd{(}\hlstr{'curl'}\hlstd{)}
+  \hlkwd{library}\hlstd{(}\hlstr{'RCurl'}\hlstd{)}
+  \hlkwd{library}\hlstd{(}\hlstr{'stringr'}\hlstd{)}
+
+  \hlcom{#Parts of the url needed for the researcher query}
+  \hlstd{base_url}\hlkwb{<-}\hlstr{"https://scholar.google.com"}
+  \hlstd{url1}\hlkwb{<-}\hlstr{"/scholar?q="}
+
+  \hlcom{#User input to obtain name of researcher of interest}
+  \hlstd{usr_input}\hlkwb{<-}\hlkwd{readline}\hlstd{(}\hlkwc{prompt}\hlstd{=}\hlstr{"Enter researcher name (first and last): "}\hlstd{)}
+  \hlstd{spltname}\hlkwb{<-}\hlkwd{strsplit}\hlstd{(usr_input,} \hlstr{" "}\hlstd{)} \hlcom{#Splits the name based on prescence of whitespace}
+  \hlcom{#completed url needed for query}
+  \hlstd{complete_url}\hlkwb{<-}\hlkwd{paste0}\hlstd{(base_url,url1,spltname[[}\hlnum{1}\hlstd{]][}\hlnum{1}\hlstd{],}\hlstr{"+"}\hlstd{,spltname[[}\hlnum{1}\hlstd{]][}\hlnum{2}\hlstd{])}
+
+  \hlcom{#Reads lines from the url given. Stores locally for processing}
+  \hlstd{doc}\hlkwb{<-}\hlkwd{htmlParse}\hlstd{(}\hlkwd{readLines}\hlstd{(complete_url))}
+
+  \hlkwd{Sys.sleep}\hlstd{(}\hlnum{2}\hlstd{)} \hlcom{#time for the system to sleep so rapid querying does not occur}
+  \hlcom{#Collects list of nodes from downloaded html}
+  \hlcom{#pattern is "//a[@href]"}
+  \hlstd{listofANodes}\hlkwb{<-}\hlkwd{getNodeSet}\hlstd{(doc,} \hlstr{"//a[@href]"}\hlstd{)}
+
+  \hlcom{#Empty vector linklist needed for type conversion}
+  \hlcom{#for-loop handles conversion from 'externalptr' to 'character'}
+  \hlstd{linklist}\hlkwb{<-}\hlkwd{c}\hlstd{()}
+  \hlkwa{for} \hlstd{(item} \hlkwa{in} \hlstd{listofANodes) \{}
+    \hlstd{temp}\hlkwb{<-}\hlkwd{as}\hlstd{(item,} \hlstr{"character"}\hlstd{)}
+    \hlstd{linklist}\hlkwb{<-}\hlkwd{c}\hlstd{(linklist, temp)}
+  \hlstd{\}}
+  \hlcom{##search1<-paste0(spltname[[1]][1]," ",spltname[[1]][2])}
+  \hlcom{##search2<-paste0(spltname[[1]][2]," ",spltname[[1]][1])}
+  \hlcom{#locates the position of the user name of interest in the link}
+  \hlstd{occurence_position}\hlkwb{<-}\hlkwd{grep}\hlstd{(usr_input, linklist)}
+  \hlcom{#now it takes the first occurence and extracts the url needed for researcher user profile citation page}
+  \hlstd{location}\hlkwb{<-}\hlkwd{as.numeric}\hlstd{(occurence_position[[}\hlnum{2}\hlstd{]])}
+  \hlstd{loc}\hlkwb{<-}\hlstd{linklist[[location]]}
+  \hlstd{url2}\hlkwb{<-}\hlkwd{gsub}\hlstd{(}\hlstr{'(<a href=\textbackslash{}\textbackslash{}")|(".*)'}\hlstd{,}\hlstr{""}\hlstd{,loc)}
+  \hlcom{#constructs the full url of researcher user profile}
+  \hlstd{full_url}\hlkwb{<-}\hlkwd{paste0}\hlstd{(base_url,url2)}
+  \hlcom{#grabs the user ID from the string version of the extracted link}
+  \hlstd{user_ID}\hlkwb{<-}\hlkwd{gsub}\hlstd{(}\hlstr{'(.*user=)|(&.*)'}\hlstd{,}\hlstr{""}\hlstd{,loc)}
+
+  \hlstd{doc2}\hlkwb{<-}\hlkwd{htmlParse}\hlstd{(}\hlkwd{readLines}\hlstd{(full_url))}
+  \hlkwd{Sys.sleep}\hlstd{(}\hlnum{2}\hlstd{)}
+  \hlstd{returnlist}\hlkwb{<-}\hlkwd{c}\hlstd{(user_ID, doc2)}
+  \hlkwd{return}\hlstd{(returnlist)}
+\hlstd{\}}
+\hlcom{#Command used to extract information for Geoffrey Hinton from Google Scholar}
+\hlcom{#GeoffreyHinton<-researcherHTML()}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+\subsection{Part (b)}
+\noindent{The function, gs\_citation\_dataframe(), reads in the html text from the output of the previous function and utilizes the getNodeSet() function to extract the journal article information requested in the problem; article title, authors, journal information, number of citations, and year published.  The lists are then converted from the type 'externalptr' to 'character.'  The gsub() function is then used to strip away the non-relevant text, before and after, the title, authors, journal information, number of citations, and the year published.  The information is saved into vectors and then the data frame is constructed and returned.}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{##Function for Problem 2 Part (b) of Problem Set II}
+\hlcom{##Write a function to extract the Article Title, Authors, Journal Information, number of citations}
+\hlcom{##and year published to a dataframe.}
+\hlstd{gs_citation_dataframe}\hlkwb{<-}\hlkwa{function}\hlstd{(}\hlkwc{html_citation_page}\hlstd{)}
+\hlstd{\{}
+  \hlcom{#Relevant libraries for the operation of the function}
+  \hlkwd{library}\hlstd{(}\hlstr{'bitops'}\hlstd{)}
+  \hlkwd{library}\hlstd{(}\hlstr{'XML'}\hlstd{)}
+  \hlkwd{library}\hlstd{(}\hlstr{'curl'}\hlstd{)}
+  \hlkwd{library}\hlstd{(}\hlstr{'RCurl'}\hlstd{)}
+  \hlkwd{library}\hlstd{(}\hlstr{'stringr'}\hlstd{)}
+
+  \hlcom{#function for converting contents of node lists to character class, from 'externalptr'}
+  \hlstd{character_conv}\hlkwb{<-}\hlkwa{function}\hlstd{(}\hlkwc{NODELIST}\hlstd{)}
+  \hlstd{\{}
+    \hlstd{linklist}\hlkwb{<-}\hlkwd{c}\hlstd{()}
+    \hlkwa{for} \hlstd{(item} \hlkwa{in} \hlstd{NODELIST) \{}
+      \hlstd{temp}\hlkwb{<-}\hlkwd{as}\hlstd{(item,} \hlstr{"character"}\hlstd{)}
+      \hlstd{linklist}\hlkwb{<-}\hlkwd{c}\hlstd{(linklist, temp)}
+    \hlstd{\}}
+    \hlkwd{return}\hlstd{(linklist)}
+  \hlstd{\}}
+
+  \hlcom{#Take the html text from the output from the previous function}
+  \hlcom{#Use getNodeSet() in order to extract article information, citation numbers, and year published}
+  \hlstd{articleinfoNode}\hlkwb{<-}\hlkwd{getNodeSet}\hlstd{(html_citation_page,}\hlstr{'//tr[@class="gsc_a_tr"]'}\hlstd{)}
+  \hlstd{citationNode}\hlkwb{<-}\hlkwd{getNodeSet}\hlstd{(html_citation_page,}\hlstr{'//td[@class="gsc_a_c"]'}\hlstd{)}
+  \hlstd{yearNode}\hlkwb{<-}\hlkwd{getNodeSet}\hlstd{(html_citation_page,}\hlstr{'//td[@class="gsc_a_y"]'}\hlstd{)}
+
+  \hlcom{#Convert the lists of relevant information to characters for string processing}
+  \hlstd{articleinfoList}\hlkwb{<-}\hlkwd{character_conv}\hlstd{(articleinfoNode)}
+  \hlstd{citationList}\hlkwb{<-}\hlkwd{character_conv}\hlstd{(citationNode)}
+  \hlstd{yearList}\hlkwb{<-}\hlkwd{character_conv}\hlstd{(yearNode)}
+
+  \hlcom{#Now perform string processing to extract the following--}
+  \hlcom{#title, author, journal info, number of citations, year published}
+  \hlcom{#Extracts the desired information by stripping away text before and after important text}
+
+  \hlcom{#Number of Citations}
+  \hlstd{cL}\hlkwb{<-}\hlkwd{gsub}\hlstd{(}\hlstr{'(</a>.*)'}\hlstd{,}\hlstr{""}\hlstd{,citationList)}
+  \hlstd{num_cite}\hlkwb{<-}\hlkwd{gsub}\hlstd{(}\hlstr{'(.*">)'}\hlstd{,}\hlstr{""}\hlstd{,cL)}
+  \hlcom{#Year Published}
+  \hlstd{year_1}\hlkwb{<-}\hlkwd{gsub}\hlstd{(}\hlstr{'.*gsc_a_h">'}\hlstd{,}\hlstr{""}\hlstd{,yearList)}
+  \hlstd{year_pub}\hlkwb{<-}\hlkwd{gsub}\hlstd{(}\hlstr{'</span>.*'}\hlstd{,}\hlstr{""}\hlstd{,year_1)}
+  \hlcom{#article title}
+  \hlstd{title_1}\hlkwb{<-}\hlkwd{gsub}\hlstd{(}\hlstr{'(.*gsc_a_at">)'}\hlstd{,}\hlstr{""}\hlstd{,articleinfoList)}
+  \hlstd{titles}\hlkwb{<-}\hlkwd{gsub}\hlstd{(}\hlstr{'(</a>.*)'}\hlstd{,}\hlstr{""}\hlstd{,title_1)}
+  \hlcom{#authors}
+  \hlstd{author_1}\hlkwb{<-}\hlkwd{gsub}\hlstd{(}\hlstr{'(</div>\textbackslash{}\textbackslash{}n.*)'}\hlstd{,}\hlstr{""}\hlstd{,articleinfoList)}
+  \hlstd{authors}\hlkwb{<-}\hlkwd{gsub}\hlstd{(}\hlstr{'(.*gs_gray">)'}\hlstd{,}\hlstr{""}\hlstd{,author_1)}
+  \hlcom{#journal information}
+  \hlstd{journal_info_1}\hlkwb{<-}\hlkwd{gsub}\hlstd{(}\hlstr{'(.*gs_gray">)'}\hlstd{,}\hlstr{""}\hlstd{,articleinfoList)}
+  \hlstd{journal_info}\hlkwb{<-}\hlkwd{gsub}\hlstd{(}\hlstr{'(<span.*)'}\hlstd{,}\hlstr{""}\hlstd{,journal_info_1)}
+
+  \hlcom{#Now create the dataframe of citations for user profile on Google Scholar}
+  \hlstd{user_profile_info}\hlkwb{<-}\hlkwd{data.frame}\hlstd{(titles, authors, journal_info, year_pub, num_cite)}
+  \hlkwd{return}\hlstd{(user_profile_info)}
+\hlstd{\}}
+\hlcom{#Line used to create data fram for Geoffrey Hinton}
+\hlcom{#GHinton<-gs_citation_dataframe(GeoffreyHinton[[2]])}
+
+\hlcom{#Now to pick another researcher, let's say Terrence Sejnowski}
+\hlcom{#Commands used are below}
+\hlcom{#Terrence<-researcherHTML()}
+\hlcom{#TSejnowski<-gs_citation_dataframe(Terrence[[2]])}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+\subsection{Part (c)}
+\noindent{Here is the work for Part (c).}
+\subsection{Part (d)}
+\noindent{Maybe if I had time, I will get to Part (d).}
+\end{document}
