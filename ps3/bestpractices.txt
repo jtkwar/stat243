@@ -1,0 +1,12 @@
+Name: Jeffrey Kwarsick
+SID: 24974295
+e-mail: kwarsick@berkeley.edu
+github-name: jtkwar
+Status: enrolled
+
+### Problem 1 Part (c) ###
+For question 1, I read the article "Best Practices for Scientific Computing."  I thought that it illustrated a great number of techniques to keep in mind for when building, implementing, and maintaining code and programs used for scientific computing.  
+
+What is my substantial comment or question for the discussing of good practices to keep when working on scientific coding projects.
+
+The glaring fact that scientists lack a formal education in the development and implementation software required for data collection or analysis in 
