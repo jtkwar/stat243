@@ -5,8 +5,14 @@ github-name: jtkwar
 Status: enrolled
 
 ### Problem 1 Part (c) ###
-For question 1, I read the article "Best Practices for Scientific Computing."  I thought that it illustrated a great number of techniques to keep in mind for when building, implementing, and maintaining code and programs used for scientific computing.  
+For question 1, I read the article "Best Practices for Scientific Computing," by Greg Wilson et. al. My substantive comment and question regarding the material discussed in the article is --
 
-What is my substantial comment or question for the discussing of good practices to keep when working on scientific coding projects.
+Why has there not been greater integration of software development and implementation practices into the training of new generations of scientists?
 
-The glaring fact that scientists lack a formal education in the development and implementation software required for data collection or analysis in 
+With the ever increasing number of scientists developing and using software in order to conduct their research, there should be a mandatory requirement during undergraduate degrees in the sciences in order to teach students the fundamentals and formalisms of somputing in science, just as they are taught the basics and formalisms necessary to conduct scientific research.
+
+Upon reading this article, it became clear to me the amount of overlap between the rigors necessary for conducting a scientific experiment and for developing and implementing code for analysis or to complete any other task.  For example, the article references the scientific notebook and how observations and protocols written in it should be clear and concise to any reader, whether it be the scientist that wrote it or another person entirely.  Whomever picks up the notebook should be able to replicate the experiment without issue.  In the world of software development, correctly commented code allows for any person to follow what is going on and what each section of code does.  This striking similarity in record keeping for clarity, to me, illustrates the importance of having some degree of formalism taught to scientists in software development and implementation, especially the importance of computing in science is increasing every day.  
+
+I am not advocating that scientists or any one else should not go down the path of self-teaching.  I am a scientist that, upon starting graduate school, realized the importance of programming in my field and the larger world around me and sought to develop that skill set.  While I was able to pick up on a lot of the 'best practices' in programming, there were several that I have yet to learn/adopt or am still working on developing.  Overall, I believe integrating programming training into the cirriculum of current and future scientists should occur because it is always easier to establish good programming practices at the outset, rather than correct poor practices down the road.
+
+
