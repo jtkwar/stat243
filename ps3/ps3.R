@@ -145,7 +145,7 @@ stagedir_free_txt <- lapply(dram_free_text, rm_stage_dir)
 all_plays_spkr_processing <- lapply(stagedir_free_txt[-4], find_characters_lines)
 
 #Determine the number of words per play
-word_play_tot <- list()
+word_play_tot <- c()
 for (i in 1:length(all_plays_spkr_processing)) {
   tmp <- 0
   low_bound <- length(all_plays_spkr_processing[[i]])-all_plays_spkr_processing[[i]][[3]]
@@ -158,9 +158,9 @@ for (i in 1:length(all_plays_spkr_processing)) {
 #Calulates the number of words per chunk for each play
 #then saves it to a list
 avg_wdp_chunk_per_play <- c()
-for (i in 1:length(words_per_play)) {
+for (i in 1:length(word_play_tot)) {
   tmp <- 0
-  tmp <- words_per_play[1]/all_plays_spkr_processing[[i]][[3]]
+  tmp <- word_play_tot[i]/all_plays_spkr_processing[[i]][[3]]
   avg_wdp_chunk_per_play <- c(avg_wdp_chunk_per_play, tmp)
 }
 
