@@ -1,0 +1,269 @@
+\documentclass{article}
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
+\begin{document}
+\title{Problem Set 4}
+\author{Jeffrey Kwarsick}
+\maketitle
+\section{Problem 1}
+\subsection{Part (a)}
+The maximum number of copies that exist of vector 1:10 during the first execution of \emph{myFun()} is once.  From the code that I ran below, while invoking the \emph{.Internal(inspect())} commands, I was able to observe that the vector \emph{x} was passed into function x and since there was no operations conducted on the vector, the memory location is passed into the function \emph{f} and it's memory location is referenced as it is saved to the variable \emph{data}, located within the function.  When the vector is operated on within function \emph{f()} with function \emph{g()}, a copy is created within the local function environment and then the resulting vector from the operations of \emph{g()} is produced and outputed.  There is only a single copy because the vector is only being modified in a single spot, when operated on by function \emph{g()}.  A copy is made because objects in R are immutable, so to change them a copy is made locally within the function and the original is not modified.  After the operations are complete the copy of the vector is then deleted.
+\par{Overall, this is an example of how R uses \emph{pass-by-value} in order to conduct operations of the function.  It makes a copy and executes operations on the copy of the object as needed rather than operating and modifying the original object.  This maintains the immutable nature of objects in R.  Specifically, this is referred as \emph{copy-on-change}.  This means that unless a change is made to the object, the function always references back to the original object, but when the function is going to make a change on the object, a copy is then made to carry out the operations.}
+<<>>=
+library('pryr')
+x <- 1:10
+.Internal(inspect(x))
+f <- function(input) {
+  .Internal(inspect(input))
+  data <- input
+  .Internal(inspect(data))
+  g <- function(param) return(param * data)
+}
+myFun <- f(x)
+.Internal(inspect(x))
+data <- 100
+myFun(3)
+.Internal(inspect(myFun(3)))
+@
+\subsection{Part (b)}
+<<>>=
+x <- 1:10
+f <- function(input) {
+  data <- input
+  g <- function(param) return(param * data)
+}
+myFun <- f(x)
+object_size(x)
+length(serialize(x, NULL))
+rm(x)
+object_size(myFun)
+length(serialize(myFun, NULL))
+data <- 100
+myFun(3)
+@
+Running the chunk of code above with the to determine the size of \emph{myFun} and it's serialized length, I get a sizze of 2.53 kB and a length of 847.  This is done with a vector of range 1 - 10, of length 10.
+<<>>=
+x1 <- 1:10000
+f <- function(input) {
+  data <- input
+  g <- function(param) return(param * data)
+}
+myFun <- f(x1)
+object_size(x1)
+length(serialize(x1, NULL))
+rm(x1)
+object_size(myFun)
+length(serialize(myFun, NULL))
+data <- 100
+@
+Running the same code again with a long vector of length ten thousand, with a range of 1 - 10000, I observe an object size of \emph{myFun} equal to 42.5 kB and a serialized length of 80768.
+\subsection{Part (c)}
+<<>>=
+x  <- 1:10
+f <- function(data) {
+  g <- function(param) return(param * data)
+  return(g)
+}
+myFun <- f(x)
+rm(x)
+data <- 100
+myFun(3)
+@
+The reason that the above code does not work is because the way objects are referenced and copied within a function environment.  R operates on a \emph{copy-on-change} basis.  This means that until a change is to be done on the object read into the list, it only references back to the original object.  When a change is to occur to the object, such as a multiplication or addition operation, a copy of the object is then made and the operations conducted.  In the case of the code above, the vector \emph{x} is called into function \emph{f()}, but is not operated on until the called in function \emph{g()}.  In the code chunk above, the original vecto \emph{x} is removed before the the parameter required to input into \emph{myFun} is called.  When \emph{myFun(3)} was called, there was no original object to reference back to and create a copy of and this is why the R reported that x was not found, because no copy of it was made in the local function environment before it was deleted.
+\subsection{Part (d)}
+<<>>=
+x <- 1:10
+.Internal(inspect(x))
+f <- function(data){
+  g <- function(param) return(param * data)
+  return(g)
+}
+#list the variables in the global environment
+ls( envir = .GlobalEnv )
+myFun <- f(x)
+#stores pointer in the enclosed environment of the function myFun
+environment(myFun)$data
+.Internal(inspect(environment(myFun)$data))
+rm(x)
+ls( envir = .GlobalEnv )
+object_size(myFun)
+length(serialize(myFun, NULL))
+data <- 100
+myFun(3)
+@
+\noindent{In the code above, I am able to make the code from part (c) work without explicitly making a copy with the function body itself with the line of code \textbf{.Internal(inspect(environment(myFun)\$data))}.  In part (c) of the problem the \textbf{rm()} is called to remove x from the global environment in R.  With the line \textbf{.Internal(inspect(environment(myFun)\$data))}, the pointer pointing to the location in memory where x is stored and is saved to the enclosed environment of the function and thus is still able to be accessed despite the list x's removal from the global environment in R. Because there is no explicit copy made of x (as data) in the enclosed environment of \emph{myFun()}, the length of the serialized closure is considerably longer comapred to part (a) of the problem where an explicit copy of the vector is made.  The length is 10756.}
+\section{Problem 2}
+This problem was not done in RStudio, but a session of R in the terminal.  Code is written below to show what was done in order to complete the problem.
+\subsection{Part (a)}
+<<>>=
+#create a list of vectors
+list_of_vecs <- list(c(1:3), c(50:73), c(22:45))
+#Determine memory locations of the list and vectors within the list
+.Internal(inspect(list_of_vecs))
+#What is the size of the list of vectors
+object_size(list_of_vecs)
+#Change a single element within one of the vectors
+list_of_vecs[[2]][[20]] <- 169
+#Determine the memory locations and what changed
+.Internal(inspect(list_of_vecs))
+@
+When a change is made to an element within a vector within the list, a new vector is created of the vector where the change to the element was changed.  This is evident from the \textbf{.Internal(inspect())} command, revealing that the memory location of the vector where the change was made to an element was different compared to the memory locations before the changes was made.  In this case, R does not make the change in place.  It creates a copy of the vector being changed, makes the change to the element and then points to the new memory location where the changed vector resides.
+\subsection{Part (b)}
+<<>>=
+#Create a copy of list_of_vecs
+copy1 <- list_of_vecs
+#Determine memory locations of the copy
+.Internal(inspect(copy1))
+#Make a change to original list of vectors
+list_of_vecs[[3]][[3]] <- 72
+#Look at memory locations of both lists
+#of vectors
+.Internal(inspect(list_of_vecs))
+.Internal(inspect(copy1))
+@
+Upon making a copy of the original list of vectors, the copy merely points to the memory locations of the original list of vectors.  Copy-on-change is occurring when the change is made to the original list of vectors.  The copy of the list of vectors maintains the same memory locations as shown by the two calls of the \textbf{.Internal(inspect())} of the copy of the list of vectors before and after a change is made to the original list of vectors.  In the original list of vectors, a copy of the vector changed within the list is made and the other vectors within the list maintain the same memory location, indicating they were not copied.
+\subsection{Part (c)}
+<<>>=
+#Create list of lists
+list_of_lists <- list(list(1:25), list(3:7), list(90:100))
+#Make copy of list
+copy2 <- list_of_lists
+#Look at the memory locations of original and copy
+.Internal(inspect(list_of_lists))
+.Internal(inspect(copy2))
+#Add element to copy of list_of_lists
+copy2[[2]][[1]] <- append(copy2[[2]][[1]], 1001)
+#Look at the memory locations of original and copy
+#After adding element to copy2
+.Internal(inspect(list_of_lists))
+.Internal(inspect(copy2))
+@
+After creating a list of lists and then adding an element to the second list contained within the copy of the list of lists, I found that first and third lists that were unchanged between the copy and the original, were shared between the original and the copy of the list of lists.  The second lists between the original and the copy are different, indicating that it was copied in order append an element to the end of the second list within the copy.  The memory locations of the entire original list is different compared to copy.  This indicates that copy of the list was copied to a new memory location when the change was made.
+\subsection{Part (d)}
+While the overall size of \textbf{tmp} is 160 MB according to \emph{object.size(tmp)}, but from invoking \emph{gc()} I observe that only 80 MB is used.  When I invoke \emph{.Internal(inspec(tmp))}, I see that that both elements in tmp point to the same memory location.  This makes sense because both elements in \textbf{tmp} are comprised of the list of numbers, \emph{x}.  Thus, while the total size of \emph{tmp} may be 160 MB, R only uses 80 MB because both elements within \textbf{tmp} point to the memory location where \emph{x} is stored.
+\section{Problem 3}
+<<>>=
+load('ps4prob3.Rda') # should have A, n, K
+library("microbenchmark")
+# Generates the log likelihood
+ll <- function(Theta, A) {
+  sum.ind <- which(A==1, arr.ind=T)
+  logLik <- sum(log(Theta[sum.ind])) - sum(Theta)
+  return(logLik)
+}
+#Original Code
+oneUpdate <- function(A, n, K, theta.old, thresh = 0.1) { 
+  theta.old1 <- theta.old 
+  Theta.old <- theta.old %*% t(theta.old)
+  L.old <- ll(Theta.old, A)
+  q <- array(0, dim = c(n, n, K))
+  for (i in 1:n) {
+    for (j in 1:n) {
+      for (z in 1:K) {
+      if (theta.old[i, z]*theta.old[j, z] == 0) {
+        q[i, j, z] <- 0 
+        } 
+      else {
+        q[i, j, z] <- theta.old[i, z]*theta.old[j, z] /
+            Theta.old[i, j]
+        }
+      }
+    }
+  }
+  theta.new <- theta.old
+  for (z in 1:K) {
+    theta.new[,z] <- rowSums(A*q[,,z])/sqrt(sum(A*q[,,z]))
+  }
+  Theta.new <- theta.new %*% t(theta.new)
+  L.new <- ll(Theta.new, A)
+  converge.check <- abs(L.new - L.old) < thresh
+  theta.new <- theta.new/rowSums(theta.new)
+  return(list(theta = theta.new, loglik = L.new,  
+              converged = converge.check))
+}
+#Updated version of the function
+#Same initial conditions starting up
+oneUpdate.new.new <- function(A, n, K, theta.old, thresh = 0.1) { 
+  theta.old1 <- theta.old 
+  Theta.old <- theta.old %*% t(theta.old)
+  L.old <- ll(Theta.old, A)
+  q <- array(0, dim = c(n, n, K))
+  q.new <- array(0, dim = c(n, n))
+
+  theta.new <- theta.old
+  #Instead of running with 3 for-loops, creating a multi-dimensional space
+  #for performing the necessary calculations
+  #Invoking the kroeneker product yields the same matrix 
+  #No conditional checks as well
+  for (z in 1:K) {
+        # q.new <- theta.old[1:n,z] * theta.old[1:n,z] / Theta.old[1:n,1:n]
+    q.new <- matrix(kronecker(theta.old[1:n,z], theta.old[1:n,z]), nrow = n, ncol = n) /
+      Theta.old
+
+    theta.new[,z] <- rowSums(A*q.new)/sqrt(sum(A*q.new))
+  }
+  #same as the original code
+  Theta.new <- theta.new %*% t(theta.new)
+  L.new <- ll(Theta.new, A)
+  converge.check <- abs(L.new - L.old) < thresh
+  theta.new <- theta.new/rowSums(theta.new)
+  return(list(theta = theta.new, loglik = L.new,  
+              converged = converge.check))
+}
+
+#initialize the parameters at random starting values
+temp <- matrix(runif(n*K), n, K)
+theta.init <- temp/rowSums(temp)
+
+#Proof of timing
+microbenchmark(oneUpdate(A, n, K, theta.init), times=2)
+microbenchmark(oneUpdate.new.new(A, n, K, theta.init), times=2)
+
+a <- oneUpdate(A, n, K, theta.init)
+c <- oneUpdate.new.new(A, n, K, theta.init)
+
+#Proof of identity
+table(unlist(a$theta - c$theta))
+
+@
+The issue with the original code is the iteration over three for-loops to process the large matrix required for the optimization of the statisical model.  The original code requires that the array is generated by iterating over each of the points in the generated array.  This stepwise fashion, coupled with the conditional checks at each indice within the array, results in the long computation time for a single iteration of the code, let alone multiple callings of the \emph{oneUpdate()} function required for the full optimzation of the problem.  The final for-loop that is used to go over the array again to complete the optimzation check steps further increases the computation time required for the execution of this function.
+\par{This function can be improved with the elimination of the three nested for-loops and replaced with the invoking of the kroeneker product.  The Kroeneker product conducts the same multiplcation as is being done within the for-loops of the original function, but it does not require the iteration over every indice of the large array.  Being a function already present within R, invoking kroeneker to generate the necessary array required for the optimization, it already has an optimized efficiency for handling computation of large arrays/matrices.  This reduces all the three nested for-loops to a single for-loop to iterate over.}
+\par{The new version of the function is compared with old function in terms of computational time and is checked in order to determine that the new function was able to generate the same function as the original.  From the microbenchmark check, the new function is considerably more efficient at completing the task and also results in the same matrix/array generated by the original function.}
+\section{Problem 4}
+I chose to modify PIKK in order to attempt an improvement of the efficiency of this algorithm.  The original function is below.
+<<>>=
+library("microbenchmark")
+vec <- rnorm(1e5)
+k <- 500
+PIKK <- function(x, k) {
+  x[sort(runif(length(x)), index.return = TRUE)$ix[1:k]]
+}
+microbenchmark(PIKK(vec,k))
+@
+In the original version of PIKK, the vector is taken and it's length used to generate a vector of random deviates of a uniform distribution.  This new vector is then sorted and the sorted indexes of this new list are used to pick \emph{k} from the population, in this case the input vector, \emph{vec}.  Running it in this manner gives a mean time of 32.56 milliseconds.  In order to improve it, I do the following --
+<<>>=
+PIKK_new <- function(x, k) {
+  x[sample(length(x), k)]
+}
+@
+Taking advantage of the fast \emph{sample()} function in R, the original PIKK function can be drastically sped up.  Instead of generating another list, sorting it and then returning values from the indices of the generated vector for use in pick random values from the long vector supplied to the function, \emph{sample()} does the same thing.  THe increase in the efficiency of the function can be seen below.
+<<>>=
+library("ggplot2")
+vec <- rnorm(1e5)
+vec1 <- rnorm(1e4)
+k <- 500
+k1 <- 100
+k2 <- 1000
+
+#Run benchmark tests for old function and new function
+#Using different values of k to sample
+#and using two different length vectors
+old_func <- microbenchmark(PIKK(vec, k), PIKK(vec, k1), PIKK(vec,k2),
+                      PIKK(vec1,k), PIKK(vec1,k1), PIKK(vec1,k2))
+new_func <- microbenchmark(PIKK_new(vec, k), PIKK_new(vec, k1), PIKK_new(vec,k2),
+                      PIKK_new(vec1,k), PIKK_new(vec1,k1), PIKK_new(vec1,k2))
+#plot using ggplot2
+autoplot(old_func)
+autoplot(new_func)
+@
+From the plots, it is clear that invoking the \emph{sample()} function in the new function drastically increases the speed of completion compared to the original.  The bottleneck of the original \emph{PIKK} function is at the sorting step where the randomly generated distribution is sorted and the indices are taken from the lowest values in that vector.  Removing that increases the efficiency of execution of the code.
+\end{document}
