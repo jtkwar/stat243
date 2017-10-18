@@ -1,0 +1,686 @@
+\documentclass{article}\usepackage[]{graphicx}\usepackage[]{color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
+\let\hlipl\hlkwb
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\begin{document}
+\title{Problem Set 5}
+\author{Jeffrey Kwarsick}
+\maketitle
+\section{Problem 1}
+Completed the reading of the numerical linear algebra unit.
+\section{Problem 2}
+\begin{itemize}
+\item \textbf{Demonstrate how integers are stored from 1, 2, 3, ..., 2$^{53}$-2, 2$^{53}$-1 in the (-1)$^S$(1.d)(2$^{e-1023}$) format.  This problem is done with use of the library \emph{pryr}.}
+\subitem Using the number two as an example, I demonstrate how the leading bit of the 64-bit binary representation of integers controls the sign of the integer or floating decimal number.  In this case, I used positive 2 and negative 2.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{library}\hlstd{(pryr)}
+\hlkwd{options}\hlstd{(}\hlkwc{digits}\hlstd{=}\hlnum{22}\hlstd{)}
+\hlkwd{bits}\hlstd{(}\hlnum{2}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## [1] "01000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000"
+\end{verbatim}
+\begin{alltt}
+\hlkwd{bits}\hlstd{(}\hlopt{-}\hlnum{2}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## [1] "11000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000"
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+\subitem Now to show some examples of the that integers up to 2$^{53}$ can be stored exactly using the double floating precision point format.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{#2^10 examples}
+\hlnum{2}\hlopt{^}\hlnum{10}\hlopt{-}\hlnum{1}
+\end{alltt}
+\begin{verbatim}
+## [1] 1023
+\end{verbatim}
+\begin{alltt}
+\hlnum{2}\hlopt{^}\hlnum{10}
+\end{alltt}
+\begin{verbatim}
+## [1] 1024
+\end{verbatim}
+\begin{alltt}
+\hlnum{2}\hlopt{^}\hlnum{10}\hlopt{+}\hlnum{1}
+\end{alltt}
+\begin{verbatim}
+## [1] 1025
+\end{verbatim}
+\begin{alltt}
+\hlkwd{bits}\hlstd{(}\hlnum{2}\hlopt{^}\hlnum{10}\hlopt{-}\hlnum{1}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## [1] "01000000 10001111 11111000 00000000 00000000 00000000 00000000 00000000"
+\end{verbatim}
+\begin{alltt}
+\hlkwd{bits}\hlstd{(}\hlnum{2}\hlopt{^}\hlnum{10}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## [1] "01000000 10010000 00000000 00000000 00000000 00000000 00000000 00000000"
+\end{verbatim}
+\begin{alltt}
+\hlkwd{bits}\hlstd{(}\hlnum{2}\hlopt{^}\hlnum{10}\hlopt{+}\hlnum{1}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## [1] "01000000 10010000 00000100 00000000 00000000 00000000 00000000 00000000"
+\end{verbatim}
+\begin{alltt}
+\hlcom{#2^40 examples}
+\hlnum{2}\hlopt{^}\hlnum{40}\hlopt{-}\hlnum{1}
+\end{alltt}
+\begin{verbatim}
+## [1] 1099511627775
+\end{verbatim}
+\begin{alltt}
+\hlnum{2}\hlopt{^}\hlnum{40}
+\end{alltt}
+\begin{verbatim}
+## [1] 1099511627776
+\end{verbatim}
+\begin{alltt}
+\hlnum{2}\hlopt{^}\hlnum{40}\hlopt{+}\hlnum{1}
+\end{alltt}
+\begin{verbatim}
+## [1] 1099511627777
+\end{verbatim}
+\begin{alltt}
+\hlkwd{bits}\hlstd{(}\hlnum{2}\hlopt{^}\hlnum{40}\hlopt{-}\hlnum{1}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## [1] "01000010 01101111 11111111 11111111 11111111 11111111 11100000 00000000"
+\end{verbatim}
+\begin{alltt}
+\hlkwd{bits}\hlstd{(}\hlnum{2}\hlopt{^}\hlnum{40}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## [1] "01000010 01110000 00000000 00000000 00000000 00000000 00000000 00000000"
+\end{verbatim}
+\begin{alltt}
+\hlkwd{bits}\hlstd{(}\hlnum{2}\hlopt{^}\hlnum{40}\hlopt{+}\hlnum{1}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## [1] "01000010 01110000 00000000 00000000 00000000 00000000 00010000 00000000"
+\end{verbatim}
+\begin{alltt}
+\hlcom{#2^52 examples}
+\hlnum{2}\hlopt{^}\hlnum{52}\hlopt{-}\hlnum{1}
+\end{alltt}
+\begin{verbatim}
+## [1] 4503599627370495
+\end{verbatim}
+\begin{alltt}
+\hlnum{2}\hlopt{^}\hlnum{52}
+\end{alltt}
+\begin{verbatim}
+## [1] 4503599627370496
+\end{verbatim}
+\begin{alltt}
+\hlnum{2}\hlopt{^}\hlnum{52}\hlopt{+}\hlnum{1}
+\end{alltt}
+\begin{verbatim}
+## [1] 4503599627370497
+\end{verbatim}
+\begin{alltt}
+\hlkwd{bits}\hlstd{(}\hlnum{2}\hlopt{^}\hlnum{52}\hlopt{-}\hlnum{1}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## [1] "01000011 00101111 11111111 11111111 11111111 11111111 11111111 11111110"
+\end{verbatim}
+\begin{alltt}
+\hlkwd{bits}\hlstd{(}\hlnum{2}\hlopt{^}\hlnum{52}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## [1] "01000011 00110000 00000000 00000000 00000000 00000000 00000000 00000000"
+\end{verbatim}
+\begin{alltt}
+\hlkwd{bits}\hlstd{(}\hlnum{2}\hlopt{^}\hlnum{52}\hlopt{+}\hlnum{1}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## [1] "01000011 00110000 00000000 00000000 00000000 00000000 00000000 00000001"
+\end{verbatim}
+\begin{alltt}
+\hlcom{#2^53 examples}
+\hlnum{2}\hlopt{^}\hlnum{53}\hlopt{-}\hlnum{1}
+\end{alltt}
+\begin{verbatim}
+## [1] 9007199254740991
+\end{verbatim}
+\begin{alltt}
+\hlnum{2}\hlopt{^}\hlnum{53}
+\end{alltt}
+\begin{verbatim}
+## [1] 9007199254740992
+\end{verbatim}
+\begin{alltt}
+\hlkwd{bits}\hlstd{(}\hlnum{2}\hlopt{^}\hlnum{53}\hlopt{-}\hlnum{1}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## [1] "01000011 00111111 11111111 11111111 11111111 11111111 11111111 11111111"
+\end{verbatim}
+\begin{alltt}
+\hlkwd{bits}\hlstd{(}\hlnum{2}\hlopt{^}\hlnum{53}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## [1] "01000011 01000000 00000000 00000000 00000000 00000000 00000000 00000000"
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+\subitem It is observed that all of these numbers can be stored exactly as integers (a precision of 1) because all of these numbers are smaller than the machine epsilon, 2$^{-52}$ or 2.220446049250313080847e-16.  Numbers where their base of 2$^x$, where is greater than 52, will not be able to be represented exactly with an integer spacing of 1. This is shown below in the subsequent parts of this problem.  Overall, this demonstrates that integers up to 2$^{53}$ can be stored exactly with a spacing of 1 because 52 bits are allocated to the mantissa, or fractional part of a common logarithim (base 10).
+\item \textbf{Show how 2$^{53}$ and 2$^{53}$+2 can be represented exactly but not 2$^{53}$+1, so the spacing of numbers of this magnitude is 2.}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{#Integers first}
+\hlnum{2}\hlopt{^}\hlnum{53}
+\end{alltt}
+\begin{verbatim}
+## [1] 9007199254740992
+\end{verbatim}
+\begin{alltt}
+\hlnum{2}\hlopt{^}\hlnum{53}\hlopt{+}\hlnum{1}
+\end{alltt}
+\begin{verbatim}
+## [1] 9007199254740992
+\end{verbatim}
+\begin{alltt}
+\hlnum{2}\hlopt{^}\hlnum{53}\hlopt{+}\hlnum{2}
+\end{alltt}
+\begin{verbatim}
+## [1] 9007199254740994
+\end{verbatim}
+\begin{alltt}
+\hlnum{2}\hlopt{^}\hlnum{53}\hlopt{+}\hlnum{4}
+\end{alltt}
+\begin{verbatim}
+## [1] 9007199254740996
+\end{verbatim}
+\begin{alltt}
+\hlnum{2}\hlopt{^}\hlnum{53}\hlopt{+}\hlnum{6}
+\end{alltt}
+\begin{verbatim}
+## [1] 9007199254740998
+\end{verbatim}
+\begin{alltt}
+\hlnum{2}\hlopt{^}\hlnum{53}\hlopt{+}\hlnum{8}
+\end{alltt}
+\begin{verbatim}
+## [1] 9007199254741000
+\end{verbatim}
+\begin{alltt}
+\hlcom{#now the bit formats}
+\hlkwd{bits}\hlstd{(}\hlnum{2}\hlopt{^}\hlnum{53}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## [1] "01000011 01000000 00000000 00000000 00000000 00000000 00000000 00000000"
+\end{verbatim}
+\begin{alltt}
+\hlkwd{bits}\hlstd{(}\hlnum{2}\hlopt{^}\hlnum{53}\hlopt{+}\hlnum{1}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## [1] "01000011 01000000 00000000 00000000 00000000 00000000 00000000 00000000"
+\end{verbatim}
+\begin{alltt}
+\hlkwd{bits}\hlstd{(}\hlnum{2}\hlopt{^}\hlnum{53}\hlopt{+}\hlnum{2}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## [1] "01000011 01000000 00000000 00000000 00000000 00000000 00000000 00000001"
+\end{verbatim}
+\begin{alltt}
+\hlkwd{bits}\hlstd{(}\hlnum{2}\hlopt{^}\hlnum{53}\hlopt{+}\hlnum{4}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## [1] "01000011 01000000 00000000 00000000 00000000 00000000 00000000 00000010"
+\end{verbatim}
+\begin{alltt}
+\hlkwd{bits}\hlstd{(}\hlnum{2}\hlopt{^}\hlnum{53}\hlopt{+}\hlnum{6}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## [1] "01000011 01000000 00000000 00000000 00000000 00000000 00000000 00000011"
+\end{verbatim}
+\begin{alltt}
+\hlkwd{bits}\hlstd{(}\hlnum{2}\hlopt{^}\hlnum{53}\hlopt{+}\hlnum{8}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## [1] "01000011 01000000 00000000 00000000 00000000 00000000 00000000 00000100"
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+\subitem Above are the numbers investigated using the \emph{bits()} function from \emph{pryr} library.  From invoking \emph{bits()}, I observe that when adding by units of 2, it advances changes the last 8-bits, either activating or de-activating them depending on what multiple of 2 is being added.  Since there are 52-bits used for the storage of the ingeter, this means that the machine epsilon is 2$^{-52}$.  This means that for integers in the same magnitude of 2$^{53}$, the minimum spacing between them is $2^{-52}*2^{53}$, which is 2.
+\item \textbf{Show that for numbers starting with 2$^{54}$ that the spacing between integers that can be exactly represented is 4.}
+\subitem Going off of the same argument from the previous part of the problem.  The minimum spacing between integers in the realm of 2$^{54}$ will be \textbf{4} because the machine epsilon is 2$^{-52}$.  This is demonstrated below -- 
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{#showing that minimum spacing is 4}
+\hlcom{#based off the size of the number.}
+\hlnum{2}\hlopt{^}\hlstd{(}\hlopt{-}\hlnum{52}\hlstd{)}\hlopt{*}\hlnum{2}\hlopt{^}\hlstd{(}\hlnum{54}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## [1] 4
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+The difference between them is 4, representing the minimum spacing that can be exactly represented between numbers in the realm of 2$^{54}$
+\item \textbf{Confirm results are consistent with the execution of 2$^{53}$-1, 2$^{53}$, and 2$^{53}$+1.}
+\subitem Here is the execution, confirming the results from the sub-parts of Problem 2.  2$^{53}$+1 cannot be represented exactly, but 2$^{53}$-1 and 2$^{53}$ can be represented exactly.  2$^{53}$+2 was also printed to demonstrate that the spacing between numbers of the magnitude is exactly 2.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{options}\hlstd{(}\hlkwc{digits}\hlstd{=}\hlnum{22}\hlstd{)}
+\hlnum{2}\hlopt{^}\hlnum{53}\hlopt{-}\hlnum{1}
+\end{alltt}
+\begin{verbatim}
+## [1] 9007199254740991
+\end{verbatim}
+\begin{alltt}
+\hlnum{2}\hlopt{^}\hlnum{53}
+\end{alltt}
+\begin{verbatim}
+## [1] 9007199254740992
+\end{verbatim}
+\begin{alltt}
+\hlnum{2}\hlopt{^}\hlnum{53}\hlopt{+}\hlnum{1}
+\end{alltt}
+\begin{verbatim}
+## [1] 9007199254740992
+\end{verbatim}
+\begin{alltt}
+\hlnum{2}\hlopt{^}\hlnum{53}\hlopt{+}\hlnum{2}
+\end{alltt}
+\begin{verbatim}
+## [1] 9007199254740994
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+\end{itemize}
+\section{Problem 3}
+\subsection{Part (a)}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{library}\hlstd{(microbenchmark)} \hlcom{#Needed for timing of the copy}
+\hlcom{#Create numeric and integer vectors of same length}
+\hlstd{numeric_vec} \hlkwb{<-} \hlkwd{rnorm}\hlstd{(}\hlnum{1e7}\hlstd{)}
+\hlstd{integer_vec} \hlkwb{<-} \hlkwd{as.integer}\hlstd{(}\hlkwd{sample}\hlstd{(}\hlnum{1}\hlopt{:}\hlnum{1e8}\hlstd{,} \hlnum{1e7}\hlstd{))}
+
+\hlcom{#Copy Numeric and integer vectors }
+\hlstd{copy_numeric} \hlkwb{<-} \hlstd{numeric_vec}
+\hlstd{copy_integer} \hlkwb{<-} \hlstd{integer_vec}
+
+\hlcom{#Determine time to copy each vector}
+\hlkwd{system.time}\hlstd{(copy_numeric} \hlkwb{<-} \hlstd{numeric_vec)}
+\end{alltt}
+\begin{verbatim}
+##    user  system elapsed 
+##       0       0       0
+\end{verbatim}
+\begin{alltt}
+\hlkwd{system.time}\hlstd{(copy_integer} \hlkwb{<-} \hlstd{integer_vec)}
+\end{alltt}
+\begin{verbatim}
+##    user  system elapsed 
+##       0       0       0
+\end{verbatim}
+\begin{alltt}
+\hlcom{#microbenchmark timing of the copies}
+\hlkwd{microbenchmark}\hlstd{(copy_numeric} \hlkwb{<-} \hlstd{numeric_vec)}
+\end{alltt}
+\begin{verbatim}
+## Unit: nanoseconds
+##                         expr min   lq                    mean median uq
+##  copy_numeric <- numeric_vec  80 83.5 102.4899999999999948841   87.5 89
+##   max neval
+##  1572   100
+\end{verbatim}
+\begin{alltt}
+\hlkwd{microbenchmark}\hlstd{(copy_integer} \hlkwb{<-} \hlstd{integer_vec)}
+\end{alltt}
+\begin{verbatim}
+## Unit: nanoseconds
+##                         expr min lq                    mean median uq  max
+##  copy_integer <- integer_vec  82 85 107.3199999999999931788     89 91 1874
+##  neval
+##    100
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+Above, I created a vector of numerics of length 1e7 and a vector of integers of length 1e7.  Using the \emph{microbenchmark} library, I copied the both lists and found that copying the large vector of integers is slightly faster than copying a large list, of equivalent length, of numerics.  The vector of integers is only copied slightly faster by roughly 3 nanonseconds, according to the results from \emph{microbenchmark}.
+\subsection{Part (b)}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{library}\hlstd{(microbenchmark)}
+\hlcom{#variable x to grab first half of each large vector}
+\hlstd{x} \hlkwb{<-} \hlkwd{length}\hlstd{(numeric_vec)}\hlopt{/}\hlnum{2}
+\hlcom{#subsetting vectors}
+\hlcom{#grabbing the first half of each vector}
+\hlcom{#timing with microbenchmark}
+\hlkwd{microbenchmark}\hlstd{(subset_numeric} \hlkwb{<-} \hlstd{numeric_vec[}\hlnum{1}\hlopt{:}\hlstd{x],} \hlkwc{times} \hlstd{=} \hlnum{100}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## Unit: milliseconds
+##                                expr                     min
+##  subset_numeric <- numeric_vec[1:x] 28.36346699999999998454
+##                       lq                    mean                  median
+##  39.32142650000000116961 46.07480035999999756768 46.15639500000000339242
+##                       uq                     max neval
+##  47.93905700000000535965 91.84356300000000317141   100
+\end{verbatim}
+\begin{alltt}
+\hlkwd{microbenchmark}\hlstd{(subset_integer} \hlkwb{<-} \hlstd{integer_vec[}\hlnum{1}\hlopt{:}\hlstd{x],} \hlkwc{times} \hlstd{=} \hlnum{100}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## Unit: milliseconds
+##                                expr                     min
+##  subset_integer <- integer_vec[1:x] 26.34556299999999851025
+##                       lq                    mean                  median
+##  28.09336599999999961597 32.28821059999999931733 29.81952249999999793317
+##                       uq                     max neval
+##  33.26057799999999531337 67.75653200000000708769   100
+\end{verbatim}
+\begin{alltt}
+\hlcom{#system time also invoked to check timing}
+\hlkwd{system.time}\hlstd{(subset_numeric} \hlkwb{<-} \hlstd{numeric_vec[}\hlnum{1}\hlopt{:}\hlstd{x])}
+\end{alltt}
+\begin{verbatim}
+##                      user                    system 
+## 0.02899999999999991473487 0.00000000000000000000000 
+##                   elapsed 
+## 0.02899999999999991473487
+\end{verbatim}
+\begin{alltt}
+\hlkwd{system.time}\hlstd{(integer_numeric} \hlkwb{<-} \hlstd{integer_vec[}\hlnum{1}\hlopt{:}\hlstd{x])}
+\end{alltt}
+\begin{verbatim}
+##                      user                    system 
+## 0.02800000000000046895821 0.00000000000000000000000 
+##                   elapsed 
+## 0.02799999999999869260137
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+Above, a subset was taken from the large numeric vector as well as the large integer vector.  The variable \emph{x} was defined as half the length of both large vectors and was used to grab the first half of each vector.  The vector that required less time for execution, according to \emph{microbenchmark}, was the large integer vector.  The integer was faster by approximately 13\% compared to the the subsetting of the numeric vector.
+\section{Problem 4}
+\subsection{Part (a)}
+When attmpting to  parallelize matrix multiplication of two \emph{n X n} matrices, \emph{X} and \emph{Y} to produce the product \emph{XY}, it would better to break matrix \emph{Y} into \emph{p} blocks of \emph{m=n/p} columns rather individual \emph{n} column-wise computations.  The reason is that by breaking into different blocks, each block could be parallelized by passing each block to a different core on your machine in order to conduct computations.  This way, your PC is utilizing all the computational power that a multi-core processor has to offer.  Running individual column-wise computations would mean that you would likely end up with tasks to compute when compared to the number of cores at yours disposal which makes evenly dividing the computations amongst available computing resources/cores difficult.  This would likely mean that all the column-wise computations would be conducted iteratively over a single core which is costly in regards to computing time.  Therefore, by breaking up the number of columns into \emph{p} blocks where \emph{p} = number of cores, you would be maximizing the number of computations capable of being conducted by your machine, reducing computation time. 
+\subsection{Part (b)}
+Approach 1 is better for communication minimization.  The for Approach 1 being better for communication is that the entirety of matrix \emph{X} would be sent to each core within a node along with 1 of \emph{p} blocks of \emph{m} columns of matrix \emph{Y}.  Sending the entirety of \emph{X} to each core would require more memory and the product of \emph{X} and the block of \emph{Y} would be larger.  Despite taking more memory, this method would require few communications, sending all of \emph{X} and block of \emph{Y}, \emph{p$_i$}, and then receiving the product back from each core to assemble as the final product.
+\par Approach 2 is better for minimizing memory use.  The chunks that would be sent to each core would be much smaller than the entirety of each matrix, and the resulting product of these smaller chunks would also require less matrix than that of Approach 1.  While this would minimize memory use during the computation, it would require more communications.  The number of communications would be equal to all of the pairs of blocks of rows from \emph{X} and blocks of columns of \emph{Y} required to to be sent to all the cores within the nodes you have access to plus all of the communications back in order to stitch together the final product of matrices \emph{X} and \emph{Y}.  
+\section{Problem 5: Extra Credit}
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{options}\hlstd{(}\hlkwc{digits} \hlstd{=} \hlnum{22}\hlstd{)}
+\hlcom{#TRUE}
+\hlnum{0.2} \hlopt{+} \hlnum{0.3} \hlopt{==} \hlnum{0.5}
+\end{alltt}
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+\begin{alltt}
+\hlnum{0.01} \hlopt{+} \hlnum{0.49} \hlopt{==} \hlnum{0.5}
+\end{alltt}
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+\begin{alltt}
+\hlnum{0.1} \hlopt{+} \hlnum{0.1} \hlopt{==} \hlnum{0.2}
+\end{alltt}
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+\begin{alltt}
+\hlnum{0.2} \hlopt{+} \hlnum{0.2} \hlopt{==} \hlnum{0.4}
+\end{alltt}
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+\begin{alltt}
+\hlnum{0.4} \hlopt{+} \hlnum{0.1} \hlopt{==} \hlnum{0.5}
+\end{alltt}
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+\begin{alltt}
+\hlnum{0.1} \hlopt{+} \hlnum{0.5} \hlopt{==} \hlnum{0.6}
+\end{alltt}
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+\begin{alltt}
+\hlnum{0.2} \hlopt{+} \hlnum{0.2} \hlopt{+} \hlnum{0.3} \hlopt{==} \hlnum{0.7}
+\end{alltt}
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+\begin{alltt}
+\hlnum{0.2} \hlopt{+} \hlnum{0.2} \hlopt{+} \hlnum{0.2} \hlopt{+} \hlnum{0.2} \hlopt{==} \hlnum{0.8}
+\end{alltt}
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+\begin{alltt}
+\hlnum{0.4} \hlopt{+} \hlnum{0.4} \hlopt{+} \hlnum{0.1} \hlopt{==} \hlnum{0.9}
+\end{alltt}
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+\begin{alltt}
+\hlnum{0.03} \hlopt{+} \hlnum{0.03} \hlopt{+} \hlnum{0.03} \hlopt{==} \hlnum{0.09}
+\end{alltt}
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+\begin{alltt}
+\hlnum{0.02} \hlopt{+} \hlnum{0.03} \hlopt{==} \hlnum{0.05}
+\end{alltt}
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+\begin{alltt}
+\hlnum{0.001} \hlopt{+} \hlnum{0.002} \hlopt{==} \hlnum{0.003}
+\end{alltt}
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+\begin{alltt}
+\hlcom{#FALSE}
+\hlnum{0.2} \hlopt{+} \hlnum{0.1} \hlopt{==} \hlnum{0.3}
+\end{alltt}
+\begin{verbatim}
+## [1] FALSE
+\end{verbatim}
+\begin{alltt}
+\hlnum{0.1} \hlopt{+} \hlnum{0.1} \hlopt{+} \hlnum{0.1} \hlopt{==} \hlnum{0.3}
+\end{alltt}
+\begin{verbatim}
+## [1] FALSE
+\end{verbatim}
+\begin{alltt}
+\hlnum{0.1} \hlopt{+} \hlnum{0.1} \hlopt{+} \hlnum{0.1} \hlopt{+} \hlnum{0.1} \hlopt{+} \hlnum{0.1} \hlopt{+} \hlnum{0.1} \hlopt{+} \hlnum{0.1} \hlopt{+} \hlnum{0.1} \hlopt{+} \hlnum{0.1} \hlopt{==} \hlnum{0.9}
+\end{alltt}
+\begin{verbatim}
+## [1] FALSE
+\end{verbatim}
+\begin{alltt}
+\hlnum{0.1} \hlopt{+} \hlnum{0.2} \hlopt{+} \hlnum{0.3} \hlopt{==} \hlnum{0.6}
+\end{alltt}
+\begin{verbatim}
+## [1] FALSE
+\end{verbatim}
+\begin{alltt}
+\hlnum{0.2} \hlopt{+} \hlnum{0.2} \hlopt{+} \hlnum{0.2} \hlopt{==} \hlnum{0.6}
+\end{alltt}
+\begin{verbatim}
+## [1] FALSE
+\end{verbatim}
+\begin{alltt}
+\hlnum{0.4} \hlopt{+} \hlnum{0.2} \hlopt{==} \hlnum{0.6}
+\end{alltt}
+\begin{verbatim}
+## [1] FALSE
+\end{verbatim}
+\begin{alltt}
+\hlnum{0.3} \hlopt{+} \hlnum{0.3} \hlopt{+} \hlnum{0.3} \hlopt{==} \hlnum{0.9}
+\end{alltt}
+\begin{verbatim}
+## [1] FALSE
+\end{verbatim}
+\begin{alltt}
+\hlnum{0.01} \hlopt{+} \hlnum{0.01} \hlopt{+} \hlnum{0.01} \hlopt{+} \hlnum{0.01} \hlopt{+} \hlnum{0.01} \hlopt{+} \hlnum{0.01} \hlopt{+} \hlnum{0.01} \hlopt{+} \hlnum{0.01} \hlopt{+} \hlnum{0.01} \hlopt{+} \hlnum{0.01} \hlopt{==} \hlnum{0.1}
+\end{alltt}
+\begin{verbatim}
+## [1] FALSE
+\end{verbatim}
+\begin{alltt}
+\hlcom{#looking at the digits out to 22 places}
+\hlnum{0.1}
+\end{alltt}
+\begin{verbatim}
+## [1] 0.1000000000000000055511
+\end{verbatim}
+\begin{alltt}
+\hlnum{0.2}
+\end{alltt}
+\begin{verbatim}
+## [1] 0.2000000000000000111022
+\end{verbatim}
+\begin{alltt}
+\hlnum{0.3}
+\end{alltt}
+\begin{verbatim}
+## [1] 0.2999999999999999888978
+\end{verbatim}
+\begin{alltt}
+\hlnum{0.4}
+\end{alltt}
+\begin{verbatim}
+## [1] 0.4000000000000000222045
+\end{verbatim}
+\begin{alltt}
+\hlnum{0.5}
+\end{alltt}
+\begin{verbatim}
+## [1] 0.5
+\end{verbatim}
+\begin{alltt}
+\hlnum{0.6}
+\end{alltt}
+\begin{verbatim}
+## [1] 0.5999999999999999777955
+\end{verbatim}
+\begin{alltt}
+\hlnum{0.7}
+\end{alltt}
+\begin{verbatim}
+## [1] 0.6999999999999999555911
+\end{verbatim}
+\begin{alltt}
+\hlnum{0.8}
+\end{alltt}
+\begin{verbatim}
+## [1] 0.8000000000000000444089
+\end{verbatim}
+\begin{alltt}
+\hlnum{0.9}
+\end{alltt}
+\begin{verbatim}
+## [1] 0.9000000000000000222045
+\end{verbatim}
+\begin{alltt}
+\hlnum{0.01}
+\end{alltt}
+\begin{verbatim}
+## [1] 0.01000000000000000020817
+\end{verbatim}
+\begin{alltt}
+\hlnum{0.02}
+\end{alltt}
+\begin{verbatim}
+## [1] 0.02000000000000000041633
+\end{verbatim}
+\begin{alltt}
+\hlnum{0.03}
+\end{alltt}
+\begin{verbatim}
+## [1] 0.02999999999999999888978
+\end{verbatim}
+\begin{alltt}
+\hlnum{0.04}
+\end{alltt}
+\begin{verbatim}
+## [1] 0.04000000000000000083267
+\end{verbatim}
+\begin{alltt}
+\hlnum{0.05}
+\end{alltt}
+\begin{verbatim}
+## [1] 0.05000000000000000277556
+\end{verbatim}
+\begin{alltt}
+\hlnum{0.49}
+\end{alltt}
+\begin{verbatim}
+## [1] 0.4899999999999999911182
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+Above is my effort to attempt to discern a pattern from the manner in which some addition statements are true, but some are not.  I was not able to discern any pattern from this effort, but after some research I confirmed that R is only able to represent numerics exactly "are integers and fractions whose denominator is a power of 2. All other numbers are internally rounded to (typically) 53 binary digits accuracy."$^1$
+\newline
+1. Hornik, Kurt.  \emph{R FAQ}.  2017.  https://cran.r-project.org/doc/FAQ/R-FAQ.html\#Why-doesn\_0027t-R-think-these-numbers-are-equal\_003f
+\end{document}

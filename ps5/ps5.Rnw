@@ -1,0 +1,172 @@
+\documentclass{article}
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
+\begin{document}
+\title{Problem Set 5}
+\author{Jeffrey Kwarsick}
+\maketitle
+\section{Problem 1}
+Completed the reading of the numerical linear algebra unit.
+\section{Problem 2}
+\begin{itemize}
+\item \textbf{Demonstrate how integers are stored from 1, 2, 3, ..., 2$^{53}$-2, 2$^{53}$-1 in the (-1)$^S$(1.d)(2$^{e-1023}$) format.  This problem is done with use of the library \emph{pryr}.}
+\subitem Using the number two as an example, I demonstrate how the leading bit of the 64-bit binary representation of integers controls the sign of the integer or floating decimal number.  In this case, I used positive 2 and negative 2.
+<<>>=
+library(pryr)
+options(digits=22)
+bits(2)
+bits(-2)
+@
+\subitem Now to show some examples of the that integers up to 2$^{53}$ can be stored exactly using the double floating precision point format.
+<<>>=
+#2^10 examples
+2^10-1
+2^10
+2^10+1
+bits(2^10-1)
+bits(2^10)
+bits(2^10+1)
+#2^40 examples
+2^40-1
+2^40
+2^40+1
+bits(2^40-1)
+bits(2^40)
+bits(2^40+1)
+#2^52 examples
+2^52-1
+2^52
+2^52+1
+bits(2^52-1)
+bits(2^52)
+bits(2^52+1)
+#2^53 examples
+2^53-1
+2^53
+bits(2^53-1)
+bits(2^53)
+@
+\subitem It is observed that all of these numbers can be stored exactly as integers (a precision of 1) because all of these numbers are smaller than the machine epsilon, 2$^{-52}$ or 2.220446049250313080847e-16.  Numbers where their base of 2$^x$, where is greater than 52, will not be able to be represented exactly with an integer spacing of 1. This is shown below in the subsequent parts of this problem.  Overall, this demonstrates that integers up to 2$^{53}$ can be stored exactly with a spacing of 1 because 52 bits are allocated to the mantissa, or fractional part of a common logarithim (base 10).
+\item \textbf{Show how 2$^{53}$ and 2$^{53}$+2 can be represented exactly but not 2$^{53}$+1, so the spacing of numbers of this magnitude is 2.}
+<<>>=
+#Integers first
+2^53
+2^53+1
+2^53+2
+2^53+4
+2^53+6
+2^53+8
+#now the bit formats
+bits(2^53)
+bits(2^53+1)
+bits(2^53+2)
+bits(2^53+4)
+bits(2^53+6)
+bits(2^53+8)
+@
+\subitem Above are the numbers investigated using the \emph{bits()} function from \emph{pryr} library.  From invoking \emph{bits()}, I observe that when adding by units of 2, it advances changes the last 8-bits, either activating or de-activating them depending on what multiple of 2 is being added.  Since there are 52-bits used for the storage of the ingeter, this means that the machine epsilon is 2$^{-52}$.  This means that for integers in the same magnitude of 2$^{53}$, the minimum spacing between them is $2^{-52}*2^{53}$, which is 2.
+\item \textbf{Show that for numbers starting with 2$^{54}$ that the spacing between integers that can be exactly represented is 4.}
+\subitem Going off of the same argument from the previous part of the problem.  The minimum spacing between integers in the realm of 2$^{54}$ will be \textbf{4} because the machine epsilon is 2$^{-52}$.  This is demonstrated below -- 
+<<>>=
+#showing that minimum spacing is 4
+#based off the size of the number.
+2^(-52)*2^(54)
+@
+The difference between them is 4, representing the minimum spacing that can be exactly represented between numbers in the realm of 2$^{54}$
+\item \textbf{Confirm results are consistent with the execution of 2$^{53}$-1, 2$^{53}$, and 2$^{53}$+1.}
+\subitem Here is the execution, confirming the results from the sub-parts of Problem 2.  2$^{53}$+1 cannot be represented exactly, but 2$^{53}$-1 and 2$^{53}$ can be represented exactly.  2$^{53}$+2 was also printed to demonstrate that the spacing between numbers of the magnitude is exactly 2.
+<<>>=
+options(digits=22)
+2^53-1
+2^53
+2^53+1
+2^53+2
+@
+\end{itemize}
+\section{Problem 3}
+\subsection{Part (a)}
+<<>>=
+library(microbenchmark) #Needed for timing of the copy
+#Create numeric and integer vectors of same length
+numeric_vec <- rnorm(1e7)
+integer_vec <- as.integer(sample(1:1e8, 1e7))
+
+#Copy Numeric and integer vectors 
+copy_numeric <- numeric_vec
+copy_integer <- integer_vec
+
+#Determine time to copy each vector
+system.time(copy_numeric <- numeric_vec)
+system.time(copy_integer <- integer_vec)
+
+#microbenchmark timing of the copies
+microbenchmark(copy_numeric <- numeric_vec)
+microbenchmark(copy_integer <- integer_vec)
+@
+Above, I created a vector of numerics of length 1e7 and a vector of integers of length 1e7.  Using the \emph{microbenchmark} library, I copied the both lists and found that copying the large vector of integers is slightly faster than copying a large list, of equivalent length, of numerics.  The vector of integers is only copied slightly faster by roughly 3 nanonseconds, according to the results from \emph{microbenchmark}.
+\subsection{Part (b)}
+<<>>=
+library(microbenchmark)
+#variable x to grab first half of each large vector
+x <- length(numeric_vec)/2
+#subsetting vectors
+#grabbing the first half of each vector
+#timing with microbenchmark
+microbenchmark(subset_numeric <- numeric_vec[1:x], times = 100)
+microbenchmark(subset_integer <- integer_vec[1:x], times = 100)
+#system time also invoked to check timing
+system.time(subset_numeric <- numeric_vec[1:x])
+system.time(integer_numeric <- integer_vec[1:x])
+@
+Above, a subset was taken from the large numeric vector as well as the large integer vector.  The variable \emph{x} was defined as half the length of both large vectors and was used to grab the first half of each vector.  The vector that required less time for execution, according to \emph{microbenchmark}, was the large integer vector.  The integer was faster by approximately 13\% compared to the the subsetting of the numeric vector.
+\section{Problem 4}
+\subsection{Part (a)}
+When attmpting to  parallelize matrix multiplication of two \emph{n X n} matrices, \emph{X} and \emph{Y} to produce the product \emph{XY}, it would better to break matrix \emph{Y} into \emph{p} blocks of \emph{m=n/p} columns rather individual \emph{n} column-wise computations.  The reason is that by breaking into different blocks, each block could be parallelized by passing each block to a different core on your machine in order to conduct computations.  This way, your PC is utilizing all the computational power that a multi-core processor has to offer.  Running individual column-wise computations would mean that you would likely end up with tasks to compute when compared to the number of cores at yours disposal which makes evenly dividing the computations amongst available computing resources/cores difficult.  This would likely mean that all the column-wise computations would be conducted iteratively over a single core which is costly in regards to computing time.  Therefore, by breaking up the number of columns into \emph{p} blocks where \emph{p} = number of cores, you would be maximizing the number of computations capable of being conducted by your machine, reducing computation time. 
+\subsection{Part (b)}
+Approach 1 is better for communication minimization.  The for Approach 1 being better for communication is that the entirety of matrix \emph{X} would be sent to each core within a node along with 1 of \emph{p} blocks of \emph{m} columns of matrix \emph{Y}.  Sending the entirety of \emph{X} to each core would require more memory and the product of \emph{X} and the block of \emph{Y} would be larger.  Despite taking more memory, this method would require few communications, sending all of \emph{X} and block of \emph{Y}, \emph{p$_i$}, and then receiving the product back from each core to assemble as the final product.
+\par Approach 2 is better for minimizing memory use.  The chunks that would be sent to each core would be much smaller than the entirety of each matrix, and the resulting product of these smaller chunks would also require less matrix than that of Approach 1.  While this would minimize memory use during the computation, it would require more communications.  The number of communications would be equal to all of the pairs of blocks of rows from \emph{X} and blocks of columns of \emph{Y} required to to be sent to all the cores within the nodes you have access to plus all of the communications back in order to stitch together the final product of matrices \emph{X} and \emph{Y}.  
+\section{Problem 5: Extra Credit}
+<<>>=
+options(digits = 22)
+#TRUE
+0.2 + 0.3 == 0.5
+0.01 + 0.49 == 0.5
+0.1 + 0.1 == 0.2
+0.2 + 0.2 == 0.4
+0.4 + 0.1 == 0.5
+0.1 + 0.5 == 0.6
+0.2 + 0.2 + 0.3 == 0.7
+0.2 + 0.2 + 0.2 + 0.2 == 0.8
+0.4 + 0.4 + 0.1 == 0.9
+0.03 + 0.03 + 0.03 == 0.09
+0.02 + 0.03 == 0.05
+0.001 + 0.002 == 0.003
+#FALSE
+0.2 + 0.1 == 0.3
+0.1 + 0.1 + 0.1 == 0.3
+0.1 + 0.1 + 0.1 + 0.1 + 0.1 + 0.1 + 0.1 + 0.1 + 0.1 == 0.9 
+0.1 + 0.2 + 0.3 == 0.6
+0.2 + 0.2 + 0.2 == 0.6
+0.4 + 0.2 == 0.6
+0.3 + 0.3 + 0.3 == 0.9
+0.01 + 0.01 + 0.01 + 0.01 + 0.01 + 0.01 + 0.01 + 0.01 + 0.01 + 0.01 == 0.1
+#looking at the digits out to 22 places
+0.1
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+0.8
+0.9
+0.01
+0.02
+0.03
+0.04
+0.05
+0.49
+@
+Above is my effort to attempt to discern a pattern from the manner in which some addition statements are true, but some are not.  I was not able to discern any pattern from this effort, but after some research I confirmed that R is only able to represent numerics exactly "are integers and fractions whose denominator is a power of 2. All other numbers are internally rounded to (typically) 53 binary digits accuracy."$^1$
+\newline
+1. Hornik, Kurt.  \emph{R FAQ}.  2017.  https://cran.r-project.org/doc/FAQ/R-FAQ.html\#Why-doesn\_0027t-R-think-these-numbers-are-equal\_003f
+\end{document}
