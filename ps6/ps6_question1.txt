@@ -1,0 +1,44 @@
+Jeffrey Kwarsick
+SID: 24974295
+October 30, 2017
+Problem Set 6
+Question 1
+
+## Q1
+
+Answer: The goals of the simulation study was to propose a test procedure of the work developed by Vuong.  Vuong derived a 
+likelihood ratio test for model selection based on the information criterion by Kulback and Leibler.  This method was developed
+mainly for selecting models in multiple regression.  Therefore the goals of the simulation study were to test this procedure by looking
+at a 1 component mixture vs. a 2 component normal mixture and a 2 component vs a 3 component normal mixture.  Conclusions drawn 
+from this test inform an empirical change to the statistic that appears to improve the rate of convergence of the limiting distribution.
+
+## Q2
+
+Answer: The authors decided to look at two of the most simple cases, a one and two component comparison and a two and three component comparison. 
+They also decided on sample sizes that spanned from 10^1 to 10^3 with a 1000 simulations for each sample size.  Finally, 
+they also chose different mixing proportions of the component distributions as well as the spacing between the components.  
+I think the size of the sample and the number of simulations run for each scenario would affect the statistical power of the method the most.  
+Small sample sizes and small number of replications (as referred in the paper) would reduce the statistical power, rather it would have a difficult time
+to detect a small effect if one existed.  The large sample size and number of replcations conducted would reduce the likelihood of missing even the smallest affect, and
+thereby increasing the statistical power.
+I do not think there are data generating scenarios that the authors of this paper/study did not consider that would have been useful to consider.
+
+## Q3
+
+Answer: I do not think the tables presenting the results of the simulation results were not good at representing the results.
+There are numerous amounts of the numbers reported, summarizing the simulation studies.  Given the number of results, 
+I think that a more graphical representation would be better suited.  This would allow for easy comparison between results of 
+different parameters and sample size.
+
+## Q4
+
+Answer: Based off of my assessment of the tables on power, Table 2 and Table 4, the results do make sense to me in terms of 
+how the power varies as a function of the data generating mechanism.
+
+## Q5
+
+Answer: I think that the authors decided on 1000 simulations for their tests because 1000 simulations probably allowed the 
+authors of the paper to be confident that the result of the simulations represent the true statistical properties of the theorem test.
+I think that 10 simulations would not have been enough for this study.  We might decide that 1000 simulations is enough based off the 
+what we consider to be an acceptable error required to accept or disprove a hypothesis question posed at the start of the 
+simulation study.
