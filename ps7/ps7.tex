@@ -1,0 +1,262 @@
+\documentclass{article}\usepackage[]{graphicx}\usepackage[]{color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
+\let\hlipl\hlkwb
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
+\usepackage{amsmath}
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\begin{document}
+\title{Problem Set 7}
+\author{Jeffrey Kwarsick}
+\maketitle
+
+\def\B{
+\begin{bmatrix}
+    1 \\
+    0\\
+    \vdots \\
+    0
+\end{bmatrix}}
+
+\section{Problem 1}
+To determine if the standard error of the estimate of the coefficient properly characterizes the uncertainty of the estimated regression coefficient, I would first calculate the variance of my estimate of the error.  This will tell me how uncertain we are about my estimate of the standard error.  I would then calculate the variance of that variance of the previously calculated variance as this would give me a measure of the robustness of my estimate of the standard error to the variance.  These two quantities together will help determine if the standard error properly characterizes the uncertainity of the estimated regression coefficient.
+\section{Problem 2}
+Definition of matrix 2-norm:
+\[ \|A\|_2 = max_{\|z\|_2 = 1} = \frac{\|Az\|_2}{\|z\|_2} \]
+We also know that:
+\[ \|Az\|_2^2 = z^T A^T A z \]
+Because \emph{A} is symmetric, $A^T$ is also symmetric and $A^T A$ is symmetric and positive semi-definite, decomposition is possible as the following:
+\[A^T A = U D U^T \]
+Where \emph{D} is a diagonal matrix containing the eigenvalues of matrix \emph{A} in the main diagonal and \emph{U} and $U^T$ are orthogonal matrices.  Substitunting the decomposition in, we get:
+\[\frac{\|Az\|_2}{\|z\|_2} = \frac{z^T A^T A z}{z^T z} \]
+\[\frac{\|Az\|_2}{\|z\|_2} = \frac{z^T U D U^T z}{z^T U U^T z} \]
+We then set $ y = U^T z$ and substitute in.  \emph{y} is another unit vector of magnitude 1.
+\[ \frac{\|Az\|_2}{\|z\|_2} = \frac{y^T D y}{y^T y} \]
+\[ \frac{\|Az\|_2}{\|z\|_2} = \frac{\sum_{i=1}^n \sigma_i^2 \vert y_i \vert ^2}{\sum_{i=1}^n \vert y_i \vert ^2} \]
+\[ \frac{\|Az\|_2}{\|z\|_2} \leq \sigma_1^2 \]
+The inequality must be true for all non-zero \emph{z}. Because \emph{U} is orthogonal, there exists a \emph{z} that satisfies the following:
+\[ y = U^T z = \B = e_1\]
+Therefore:
+\[ z^T A^T A z = e_1 \Sigma e_1 = \sigma_1^2\]
+Therefore, we can conclude that:
+\[ \|A\|_2 = sup_{z:\|z\|_2=1}\sqrt{(Az)^T Az}  = \sigma_1 (\lambda_{max}) \]
+To solve this problem I reviewed the Linear Algebra textbook \emph{Linear Algebra with Applications, 8 ed.} by \emph{Steven J. Leon}.  I specifically referred to the chapter on numerical linear algebra.
+\section{Problem 3}
+\subsection{Part (a)}
+Consider the rectangular matrix \emph{X$_{nxp}$} and it's decomposition.
+\[ X = U_{nxp} \Lambda_{nxp} V_{pxp}^T \]
+The transpose of \emph{X} is as follows:
+\[ X^T = (U \Lambda V^T)^T \]
+\[ X^T = V \Lambda^T U^T \]
+$\Lambda$ is the diagonal matrix with the elements along its main diagonal are the eigenvalues of matrix \emph{X}.  Because of this, $$ \Lambda^T = \Lambda $$ and therefore:
+\[ X^T X = V \Lambda^T U^T U \Lambda V^T\]
+\[ = V \Lambda^T \Lambda V^T\]
+\[ X^T X = V \Lambda^2 V^T \]
+The matrices $V$ and $V^T$ are the eigenvectors of our matrix \emph{X}.  More specifically, they are teh right vectors of matrix \emph{X}.  $S^2$ is the matrix containing the square of the eigenvalues of matrix \emph{X}, or the singular values of \emph{X}.
+To show that $X^T X$ is semi-positive definite, take a vector, \emph{v}, such that all elements of \emph{v} are non-zero.
+\[ v^T X^T Xv = (Xv)^T Xv \]
+\[ v^T X^T Xv = (Xv)^T Xv \]
+\[ v^T X^T Xv = \sigma^T \sigma \]
+\[ v^T X^T Xv = \sum_i^n \sigma_i^2 \geq 0 \]
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{#define size of n and p such that n > p}
+\hlstd{n} \hlkwb{<-} \hlnum{400}
+\hlstd{p} \hlkwb{<-} \hlnum{200}
+
+\hlcom{#Generate matrix and compute eigenvalues and vectors}
+\hlcom{#and single value decomposition}
+\hlstd{X} \hlkwb{<-} \hlkwd{matrix}\hlstd{(}\hlkwd{runif}\hlstd{(n}\hlopt{*}\hlstd{p),} \hlkwc{ncol} \hlstd{= p)}
+\hlstd{eigen.mat.obj} \hlkwb{<-} \hlkwd{eigen}\hlstd{(}\hlkwd{t}\hlstd{(X)} \hlopt{%*%} \hlstd{X)}
+\hlstd{X.svd} \hlkwb{<-} \hlkwd{svd}\hlstd{(X)}
+
+\hlcom{####}
+\hlcom{# Demonstrating the right singular vectors of X are equal}
+\hlcom{# the eigenvectors of X^T * X}
+\hlcom{####}
+
+\hlcom{#Right Singular Vectors of X}
+\hlkwd{head}\hlstd{(X.svd}\hlopt{$}\hlstd{v[,}\hlnum{1}\hlopt{:}\hlnum{10}\hlstd{])}
+\end{alltt}
+\begin{verbatim}
+##             [,1]        [,2]        [,3]          [,4]          [,5]
+## [1,] -0.07080396  0.03100896 -0.09355005  0.0011934426 -0.0040461561
+## [2,] -0.07218991  0.08982150 -0.17719510  0.0917831715  0.0203154708
+## [3,] -0.07314753  0.01522183  0.03839754  0.0101932480  0.0003484046
+## [4,] -0.07558948 -0.01200526 -0.03394236 -0.0894418907 -0.0081459560
+## [5,] -0.07146606  0.08323477 -0.03832209 -0.0942793895  0.0797661640
+## [6,] -0.07296608 -0.07737278 -0.09636641  0.0007413531 -0.1112781171
+##             [,6]         [,7]         [,8]         [,9]       [,10]
+## [1,]  0.08593536 -0.170503799  0.027887833 -0.058646169  0.08915156
+## [2,] -0.06449197 -0.005417662 -0.005222063  0.030915310 -0.04752772
+## [3,]  0.08407191  0.006763511 -0.007202159  0.066658824 -0.17877367
+## [4,] -0.05878339 -0.009740819  0.005876513 -0.009051834  0.11080077
+## [5,] -0.05571076  0.035991619  0.015768070 -0.066933751 -0.01984145
+## [6,] -0.07622920  0.021910068 -0.082085434 -0.065915692 -0.10101969
+\end{verbatim}
+\begin{alltt}
+\hlcom{#Eigenvectors of X^T * X}
+\hlkwd{head}\hlstd{(eigen.mat.obj}\hlopt{$}\hlstd{vectors[,}\hlnum{1}\hlopt{:}\hlnum{10}\hlstd{])}
+\end{alltt}
+\begin{verbatim}
+##             [,1]        [,2]        [,3]          [,4]          [,5]
+## [1,] -0.07080396 -0.03100896 -0.09355005 -0.0011934426 -0.0040461561
+## [2,] -0.07218991 -0.08982150 -0.17719510 -0.0917831715  0.0203154708
+## [3,] -0.07314753 -0.01522183  0.03839754 -0.0101932480  0.0003484046
+## [4,] -0.07558948  0.01200526 -0.03394236  0.0894418907 -0.0081459560
+## [5,] -0.07146606 -0.08323477 -0.03832209  0.0942793895  0.0797661640
+## [6,] -0.07296608  0.07737278 -0.09636641 -0.0007413531 -0.1112781171
+##             [,6]         [,7]         [,8]         [,9]       [,10]
+## [1,] -0.08593536  0.170503799 -0.027887833 -0.058646169 -0.08915156
+## [2,]  0.06449197  0.005417662  0.005222063  0.030915310  0.04752772
+## [3,] -0.08407191 -0.006763511  0.007202159  0.066658824  0.17877367
+## [4,]  0.05878339  0.009740819 -0.005876513 -0.009051834 -0.11080077
+## [5,]  0.05571076 -0.035991619 -0.015768070 -0.066933751  0.01984145
+## [6,]  0.07622920 -0.021910068  0.082085434 -0.065915692  0.10101969
+\end{verbatim}
+\begin{alltt}
+\hlcom{####}
+\hlcom{# Demonstrating the singular values of X are equal}
+\hlcom{# the eigenvalues of X^T * X}
+\hlcom{####}
+
+\hlcom{#Squared Singular Values of X}
+\hlkwd{head}\hlstd{(X.svd}\hlopt{$}\hlstd{d}\hlopt{**}\hlnum{2}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+## [1] 20148.39636    93.40432    91.99540    91.58820    87.17780    85.52373
+\end{verbatim}
+\begin{alltt}
+\hlcom{#Eigenvalues of X^T * X}
+\hlkwd{head}\hlstd{(eigen.mat.obj}\hlopt{$}\hlstd{values)}
+\end{alltt}
+\begin{verbatim}
+## [1] 20148.39636    93.40432    91.99540    91.58820    87.17780    85.52373
+\end{verbatim}
+\begin{alltt}
+\hlcom{####}
+\hlcom{# Is X^T * X positive semi-definite?}
+\hlcom{####}
+\hlkwd{library}\hlstd{(matrixcalc)}
+\hlkwd{is.positive.semi.definite}\hlstd{(}\hlkwd{t}\hlstd{(X)} \hlopt{%*%} \hlstd{X)}
+\end{alltt}
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+Note: Used \emph{Linear Algebra with Applications, 8 ed.} as a reference to complete this problem.
+\subsection{Part (b)}
+Now consider the $n \times n$ matrix $\Sigma$ with the assumption that the eigendecomposition has been computed for matrix $\Sigma$.
+\[ \Sigma D \Sigma^T + Ic = \Sigma D \Sigma^T + \Sigma c \Sigma^T\]
+\[ Z = \Sigma (D + cI) \Sigma^T \]
+An example block of code to demonstrate above equations at play.
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{N} \hlkwb{<-} \hlnum{50}
+\hlstd{SIG} \hlkwb{<-} \hlkwd{crossprod}\hlstd{(}\hlkwd{matrix}\hlstd{(}\hlkwd{rnorm}\hlstd{(N}\hlopt{^}\hlnum{2}\hlstd{), N))}
+\hlstd{eigen.SIG} \hlkwb{<-} \hlkwd{eigen}\hlstd{(SIG)}
+
+\hlcom{#Create Z}
+\hlstd{Z} \hlkwb{<-} \hlstd{SIG} \hlopt{+} \hlkwd{diag}\hlstd{(N)}\hlopt{*}\hlkwd{rep}\hlstd{(}\hlnum{2}\hlstd{,}\hlnum{50}\hlstd{)}
+\hlstd{eigen.Z} \hlkwb{<-} \hlkwd{eigen}\hlstd{(Z)}
+
+\hlcom{#"Control" for comparison, slow}
+\hlstd{eigen.Z}\hlopt{$}\hlstd{values}
+\end{alltt}
+\begin{verbatim}
+##  [1] 185.992204 179.187155 163.576758 151.099994 148.630790 127.556325
+##  [7] 124.131834 111.475954 110.589666  99.740717  94.483904  92.986451
+## [13]  88.673877  78.709836  74.219753  68.392651  63.178847  61.711773
+## [19]  57.510357  53.775342  50.505141  46.715788  42.555073  39.512470
+## [25]  37.441877  36.125489  32.261110  30.922751  26.051342  24.743531
+## [31]  22.102981  20.278304  18.835744  16.977243  15.831893  14.031337
+## [37]  11.895735   9.347166   7.432472   6.739432   6.413958   5.961196
+## [43]   4.844330   4.238402   3.493753   2.612648   2.484328   2.417861
+## [49]   2.087068   2.029831
+\end{verbatim}
+\begin{alltt}
+\hlcom{#O(n) calculation, fast}
+\hlstd{eigen.SIG}\hlopt{$}\hlstd{values} \hlopt{+} \hlkwd{rep}\hlstd{(}\hlnum{2}\hlstd{,}\hlnum{50}\hlstd{)}
+\end{alltt}
+\begin{verbatim}
+##  [1] 185.992204 179.187155 163.576758 151.099994 148.630790 127.556325
+##  [7] 124.131834 111.475954 110.589666  99.740717  94.483904  92.986451
+## [13]  88.673877  78.709836  74.219753  68.392651  63.178847  61.711773
+## [19]  57.510357  53.775342  50.505141  46.715788  42.555073  39.512470
+## [25]  37.441877  36.125489  32.261110  30.922751  26.051342  24.743531
+## [31]  22.102981  20.278304  18.835744  16.977243  15.831893  14.031337
+## [37]  11.895735   9.347166   7.432472   6.739432   6.413958   5.961196
+## [43]   4.844330   4.238402   3.493753   2.612648   2.484328   2.417861
+## [49]   2.087068   2.029831
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+\section{Problem 4}
+\subsection{Part (a)}
+To start, let us consider the equation provided in this problem.
+\[ \hat{\beta} = C^{-1}d + C^{-1}A^T(AC^-1A^T)^{-1}(-AC^{-1}d + b)\]
+First, I would compute the $C^{-1}A^T(AC^-1A^T)^{-1}$ resulting in a $p \times m$ matrix.  Then I would compute the resulting matrix of $C^{-1}d$, which would be of the size $p \times 1$.  Then I would compute the result of $A C^{-1} d$ which would be of size $m \times 1$.  Then, I would compute $C^{-1}d$ which would result in a $p \times 1$ matrix.
+\par With all of the parts computed, I would then move forward to compute $\hat{\beta}$.  First I would deal with the follwing component of the equation:
+\[C^{-1}A^T(AC^-1A^T)^{-1}(-AC^{-1}d + b)\]
+I would then add the resulting $p \times 1$ matrices with the result of $C^{-1}d$ (also a $p \times 1$ matrix).  Overall, this would give me $\hat{\beta}$, a $p \times 1$ matrix.
+\subsection{Part (b)}
+Did not get to this part of the problem set.
+\section{Problem 5}
+\subsection{Part (a)}
+You cannot calculate the complete the calculation in the two stages as given by the following:
+\[ \hat{X} = Z( Z^T Z )^{-1} Z^T X \]
+\[ \hat{\beta} = (\hat{X}^T \hat{X})^{-1} \hat{X}^T y \]
+This is not possible even if you use OLS techniques for each stage because of the sizes of the matrices involved.  Matriz \emph{Z}, is 60 million rows by 630 columns and despite the matrix being sparse, it would still require a significant amount of memory in order to implement.  The sheer size of these matrices would also drastically affect the computation run speed (it would take too long because of redundant calculations eg. 0*0).
+\subsection{Part (b)}
+In order to be able to conduct the regression, I would take advantage of the \emph{R-package}, \emph{spam}.  This package would allow me to take the large matrices of \emph{Z} and \emph{X} and identify the non-zero elements in the large matrices.  Knowing the location of the non-zero elements within the matrices would then enable a faster computation of the transpose and inverse of \emph{Z} as well as the product of the first equation to product $\hat{X}$.  The same technique can be used to accomplish the computing of $\hat{\beta}$.
+\end{document}

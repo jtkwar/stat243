@@ -1,0 +1,133 @@
+\documentclass{article}
+\usepackage[letterpaper, portrait, margin=1in]{geometry}
+\usepackage{amsmath}
+\begin{document}
+\title{Problem Set 7}
+\author{Jeffrey Kwarsick}
+\maketitle
+
+\def\B{
+\begin{bmatrix}
+    1 \\
+    0\\
+    \vdots \\
+    0
+\end{bmatrix}}
+
+\section{Problem 1}
+To determine if the standard error of the estimate of the coefficient properly characterizes the uncertainty of the estimated regression coefficient, I would first calculate the variance of my estimate of the error.  This will tell me how uncertain we are about my estimate of the standard error.  I would then calculate the variance of that variance of the previously calculated variance as this would give me a measure of the robustness of my estimate of the standard error to the variance.  These two quantities together will help determine if the standard error properly characterizes the uncertainity of the estimated regression coefficient.
+\section{Problem 2}
+Definition of matrix 2-norm:
+\[ \|A\|_2 = max_{\|z\|_2 = 1} = \frac{\|Az\|_2}{\|z\|_2} \]
+We also know that:
+\[ \|Az\|_2^2 = z^T A^T A z \]
+Because \emph{A} is symmetric, $A^T$ is also symmetric and $A^T A$ is symmetric and positive semi-definite, decomposition is possible as the following:
+\[A^T A = U D U^T \]
+Where \emph{D} is a diagonal matrix containing the eigenvalues of matrix \emph{A} in the main diagonal and \emph{U} and $U^T$ are orthogonal matrices.  Substitunting the decomposition in, we get:
+\[\frac{\|Az\|_2}{\|z\|_2} = \frac{z^T A^T A z}{z^T z} \]
+\[\frac{\|Az\|_2}{\|z\|_2} = \frac{z^T U D U^T z}{z^T U U^T z} \]
+We then set $ y = U^T z$ and substitute in.  \emph{y} is another unit vector of magnitude 1.
+\[ \frac{\|Az\|_2}{\|z\|_2} = \frac{y^T D y}{y^T y} \]
+\[ \frac{\|Az\|_2}{\|z\|_2} = \frac{\sum_{i=1}^n \sigma_i^2 \vert y_i \vert ^2}{\sum_{i=1}^n \vert y_i \vert ^2} \]
+\[ \frac{\|Az\|_2}{\|z\|_2} \leq \sigma_1^2 \]
+The inequality must be true for all non-zero \emph{z}. Because \emph{U} is orthogonal, there exists a \emph{z} that satisfies the following:
+\[ y = U^T z = \B = e_1\]
+Therefore:
+\[ z^T A^T A z = e_1 \Sigma e_1 = \sigma_1^2\]
+Therefore, we can conclude that:
+\[ \|A\|_2 = sup_{z:\|z\|_2=1}\sqrt{(Az)^T Az}  = \sigma_1 (\lambda_{max}) \]
+To solve this problem I reviewed the Linear Algebra textbook \emph{Linear Algebra with Applications, 8 ed.} by \emph{Steven J. Leon}.  I specifically referred to the chapter on numerical linear algebra.
+\section{Problem 3}
+\subsection{Part (a)}
+Consider the rectangular matrix \emph{X$_{nxp}$} and it's decomposition.
+\[ X = U_{nxp} \Lambda_{nxp} V_{pxp}^T \]
+The transpose of \emph{X} is as follows:
+\[ X^T = (U \Lambda V^T)^T \]
+\[ X^T = V \Lambda^T U^T \]
+$\Lambda$ is the diagonal matrix with the elements along its main diagonal are the eigenvalues of matrix \emph{X}.  Because of this, $$ \Lambda^T = \Lambda $$ and therefore:
+\[ X^T X = V \Lambda^T U^T U \Lambda V^T\]
+\[ = V \Lambda^T \Lambda V^T\]
+\[ X^T X = V \Lambda^2 V^T \]
+The matrices $V$ and $V^T$ are the eigenvectors of our matrix \emph{X}.  More specifically, they are teh right vectors of matrix \emph{X}.  $S^2$ is the matrix containing the square of the eigenvalues of matrix \emph{X}, or the singular values of \emph{X}.
+To show that $X^T X$ is semi-positive definite, take a vector, \emph{v}, such that all elements of \emph{v} are non-zero.
+\[ v^T X^T Xv = (Xv)^T Xv \]
+\[ v^T X^T Xv = (Xv)^T Xv \]
+\[ v^T X^T Xv = \sigma^T \sigma \]
+\[ v^T X^T Xv = \sum_i^n \sigma_i^2 \geq 0 \]
+<<>>=
+#define size of n and p such that n > p
+n <- 400
+p <- 200
+
+#Generate matrix and compute eigenvalues and vectors
+#and single value decomposition
+X <- matrix(runif(n*p), ncol = p)
+eigen.mat.obj <- eigen(t(X) %*% X)
+X.svd <- svd(X)
+
+####
+# Demonstrating the right singular vectors of X are equal
+# the eigenvectors of X^T * X
+####
+
+#Right Singular Vectors of X
+head(X.svd$v[,1:10])
+#Eigenvectors of X^T * X
+head(eigen.mat.obj$vectors[,1:10])
+
+####
+# Demonstrating the singular values of X are equal
+# the eigenvalues of X^T * X
+####
+
+#Squared Singular Values of X
+head(X.svd$d**2)
+#Eigenvalues of X^T * X
+head(eigen.mat.obj$values)
+
+####
+# Is X^T * X positive semi-definite?
+####
+library(matrixcalc)
+is.positive.semi.definite(t(X) %*% X)
+@
+Note: Used \emph{Linear Algebra with Applications, 8 ed.} as a reference to complete this problem.
+\subsection{Part (b)}
+Now consider the $n \times n$ matrix $\Sigma$ with the assumption that the eigendecomposition has been computed for matrix $\Sigma$.
+\[ \Sigma D \Sigma^T + Ic = \Sigma D \Sigma^T + \Sigma c \Sigma^T\]
+\[ Z = \Sigma (D + cI) \Sigma^T \]
+An example block of code to demonstrate above equations at play.
+<<>>=
+N <- 50
+SIG <- crossprod(matrix(rnorm(N^2), N))
+eigen.SIG <- eigen(SIG)
+
+#Create Z
+Z <- SIG + diag(N)*rep(2,50)
+eigen.Z <- eigen(Z)
+
+#"Control" for comparison, slow
+eigen.Z$values
+
+#O(n) calculation, fast
+eigen.SIG$values + rep(2,50)
+@
+\section{Problem 4}
+\subsection{Part (a)}
+To start, let us consider the equation provided in this problem.
+\[ \hat{\beta} = C^{-1}d + C^{-1}A^T(AC^-1A^T)^{-1}(-AC^{-1}d + b)\]
+First, I would compute the $C^{-1}A^T(AC^-1A^T)^{-1}$ resulting in a $p \times m$ matrix.  Then I would compute the resulting matrix of $C^{-1}d$, which would be of the size $p \times 1$.  Then I would compute the result of $A C^{-1} d$ which would be of size $m \times 1$.  Then, I would compute $C^{-1}d$ which would result in a $p \times 1$ matrix.
+\par With all of the parts computed, I would then move forward to compute $\hat{\beta}$.  First I would deal with the follwing component of the equation:
+\[C^{-1}A^T(AC^-1A^T)^{-1}(-AC^{-1}d + b)\]
+I would then add the resulting $p \times 1$ matrices with the result of $C^{-1}d$ (also a $p \times 1$ matrix).  Overall, this would give me $\hat{\beta}$, a $p \times 1$ matrix.
+\subsection{Part (b)}
+Did not get to this part of the problem set.
+\section{Problem 5}
+\subsection{Part (a)}
+You cannot calculate the complete the calculation in the two stages as given by the following:
+\[ \hat{X} = Z( Z^T Z )^{-1} Z^T X \]
+\[ \hat{\beta} = (\hat{X}^T \hat{X})^{-1} \hat{X}^T y \]
+This is not possible even if you use OLS techniques for each stage because of the sizes of the matrices involved.  Matriz \emph{Z}, is 60 million rows by 630 columns and despite the matrix being sparse, it would still require a significant amount of memory in order to implement.  The sheer size of these matrices would also drastically affect the computation run speed (it would take too long because of redundant calculations eg. 0*0).
+\subsection{Part (b)}
+In order to be able to conduct the regression, I would take advantage of the \emph{R-package}, \emph{spam}.  This package would allow me to take the large matrices of \emph{Z} and \emph{X} and identify the non-zero elements in the large matrices.  Knowing the location of the non-zero elements within the matrices would then enable a faster computation of the transpose and inverse of \emph{Z} as well as the product of the first equation to product $\hat{X}$.  The same technique can be used to accomplish the computing of $\hat{\beta}$.
+\end{document}
