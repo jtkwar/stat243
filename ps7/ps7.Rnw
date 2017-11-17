@@ -62,7 +62,7 @@ p <- 200
 #Generate matrix and compute eigenvalues and vectors
 #and single value decomposition
 X <- matrix(runif(n*p), ncol = p)
-eigen.mat.obj <- eigen(t(X) %*% X)
+eigen.X <- eigen(t(X) %*% X)
 X.svd <- svd(X)
 
 ####
@@ -71,9 +71,9 @@ X.svd <- svd(X)
 ####
 
 #Right Singular Vectors of X
-head(X.svd$v[,1:10])
+print(X.svd$v[1:5,1:10])
 #Eigenvectors of X^T * X
-head(eigen.mat.obj$vectors[,1:10])
+print(eigen.X$vectors[1:5,1:10])
 
 ####
 # Demonstrating the singular values of X are equal
@@ -81,13 +81,14 @@ head(eigen.mat.obj$vectors[,1:10])
 ####
 
 #Squared Singular Values of X
-head(X.svd$d**2)
+print(X.svd$d[1:10]**2)
 #Eigenvalues of X^T * X
-head(eigen.mat.obj$values)
+print(eigen.X$values[1:10])
 
 ####
-# Is X^T * X positive semi-definite?
+# Using a library in R to determine if X^T * X is positive semi-definite
 ####
+
 library(matrixcalc)
 is.positive.semi.definite(t(X) %*% X)
 @
