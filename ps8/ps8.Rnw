@@ -2,9 +2,9 @@
 \usepackage[letterpaper, portrait, margin=1in]{geometry}
 \usepackage{amsmath}
 \begin{document}
-\title{Problem Set 7}
+\title{Problem Set 8}
 \author{Jeffrey Kwarsick}
-
+\maketitle
 \section{Problem 1}
 \subsection{Part (a)}
 The pareto distribution decays more quickly than the exponential distribution.  This is illustrated below with a sample plot.  The black line is the pareto distribution and green line is the exponential distribution.
@@ -122,6 +122,7 @@ hist(x.Ests)
 hist(x2.Ests)
 
 @
+The higher weighted values are sampled with greater frequency compared to the lower weighted values.  This is because of the fact that we are using importance sampling.
 \subsection{Part (c)}
 <<>>=
 ################
@@ -156,6 +157,7 @@ hist(x.Ests)
 hist(x2.Ests)
 
 @
+The weights in this version of the importance sampling is not as extreme as compared to the importance sampling of the previous part.
 \section{Problem 2}
 <<>>=
 ##################

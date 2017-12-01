@@ -53,9 +53,9 @@
 \usepackage{amsmath}
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \begin{document}
-\title{Problem Set 7}
+\title{Problem Set 8}
 \author{Jeffrey Kwarsick}
-
+\maketitle
 \section{Problem 1}
 \subsection{Part (a)}
 The pareto distribution decays more quickly than the exponential distribution.  This is illustrated below with a sample plot.  The black line is the pareto distribution and green line is the exponential distribution.
@@ -192,6 +192,7 @@ The pareto distribution decays more quickly than the exponential distribution.  
 \includegraphics[width=\maxwidth]{figure/unnamed-chunk-2-1} 
 
 \end{knitrout}
+The higher weighted values are sampled with greater frequency compared to the lower weighted values.  This is because of the fact that we are using importance sampling.
 \subsection{Part (c)}
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
@@ -249,6 +250,7 @@ The pareto distribution decays more quickly than the exponential distribution.  
 \includegraphics[width=\maxwidth]{figure/unnamed-chunk-3-1} 
 
 \end{knitrout}
+The weights in this version of the importance sampling is not as extreme as compared to the importance sampling of the previous part.
 \section{Problem 2}
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
